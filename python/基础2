@@ -1,7 +1,7 @@
 # coding=gbk
+
 """
 公众号：法纳斯特 2023-03-18
-
 """
 
 # 列表stepping
@@ -41,6 +41,7 @@ print(next(y))  # 5
 #
 # testmod(name='Mul', verbose=True)
 
+
 # Yield声明
 # 工作方式类似于return语句，但他不会终止函数并返回，而是返回到它返回给调用者的点
 def yield_func():
@@ -52,6 +53,7 @@ def yield_func():
 
     print('third yield...')
     yield 3
+
 
 print(list(yield_func()))
 # first yield...
@@ -73,9 +75,9 @@ dic_1 = {
     'y_factor': 100
 }
 # print(dic_1['z_factor']) # KeyError: 'z_factor'
-print(dic_1.get('z_factor')) # None
+print(dic_1.get('z_factor'))  # None
 
-# Python是支持还有for和while循环的else的，当循环完成其迭代 且没有任何中断时，将执行此else语句
+# Python是支持含有for和while循环的else的，当循环完成其迭代 且没有任何中断时，将执行此else语句
 for x in range(10):
     print(x)
 else:
@@ -104,9 +106,12 @@ print(x)  # True
 x = 'True' if 6 < 4 else 'False'
 print(x)  # False
 
+
 # 参数拆包
-def pac_func(x, y):
-    print(x, y)
+def pac_func(a, b):
+    print(a, b)
+    
+    
 list_1 = [100, 200]
 dic_1 = {
     'x': 100,
