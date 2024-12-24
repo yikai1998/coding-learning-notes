@@ -2,306 +2,302 @@
 
 """
 公众号文章:法纳斯特 2022-01-22
-
 整理了90个Pandas案例，强烈建议收藏
 """
-import datetime
 
+import datetime
 import pandas as pd
 import numpy as np
 
+
 # 01 如何使用列表和字典创建Series
+
 # 1.1 使用列表创建Series
-# ser1 = pd.Series([1.5, 2.5, 3, 4.5, 5.0, 6])
+ser1 = pd.Series([1.5, 2.5, 3, 4.5, 5.0, 6])
 
 # 1.2 使用name参数创建Series
-# ser2 = pd.Series(['India', 'Canada', 'Germany'], name='Countries')
+ser2 = pd.Series(['India', 'Canada', 'Germany'], name='Countries')
 
 # 1.3 使用简写的列表创建Series
-# ser3 = pd.Series(['A']*4 + ['V']*5)
+ser3 = pd.Series(['A']*4 + ['V']*5)
 
 # 1.4 使用字典创建Series
-# ser4 = pd.Series(
-#     {'China': 'Beijing',
-#      'Japan': 'Tokyo',
-#      'Korea': 'Soul'}
-# )
+ser4 = pd.Series(
+    {'China': 'Beijing',
+     'Japan': 'Tokyo',
+     'Korea': 'Soul'}
+)
 
 # 02 如何使用Numpy函数创建Series
-# ser5 = pd.Series(np.linspace(1, 100, 5))
+ser5 = pd.Series(np.linspace(1, 100, 5))  # from 1 to 100, totally 5 eqv steps
 
 # 03 如何获取Series的索引和值
-# ser6 = pd.Series(np.random.normal(size=10))
-# print(ser6.values)
-# print(ser6.index)
+ser6 = pd.Series(np.random.normal(size=10))
+print(ser6.values)
+print(ser6.index)
 
 # 04 如何在创建Series时指定索引
-# values = ['India', 'Canada', 'Australia', 'Japan', 'Germany', 'France']
-# ccy_code = ['INR', 'CAD', 'AUD', 'JPY', 'EUR', 'EUR']
-# ser7 = pd.Series(values, index=ccy_code)
+values = ['India', 'Canada', 'Australia', 'Japan', 'Germany', 'France']
+ccy_code = ['INR', 'CAD', 'AUD', 'JPY', 'EUR', 'EUR']
+ser7 = pd.Series(values, index=ccy_code)
+print(ser7)
 
 # 05 如何获取Series的大小和形状
-# print(ser7.shape)
-# print(ser7.size)
-# print(len(ser7))
+print(ser7.shape)
+print(ser7.size)
+print(len(ser7))
 
 # 06 如何获取Series开始或末尾几行的数据
-# print(ser7.head(3))
-# print(ser7.tail(2))
-# print(ser7.take([1,3,5]))
+print(ser7.head(3))
+print(ser7.tail(2))
+print(ser7.take([1,3,5]))
 
 # 07 使用切片获取Series子集
-# print(ser7[0:5:2])
-# print(ser7[5::-1])
+print(ser7[0:5:2])
+print(ser7[5::-1])
 
 # 08 如何创建DataFrame
-# df = pd.DataFrame({
-#     'EmpCode': ['Emp001', 'Emp002'],
-#     'Name': ['John Doe', 'William Spark'],
-#     'Occupation': ['Chemist', 'Statistician'],
-#     'Date of Join': ['2018-01-25', '2018-01-26'],
-#     'Age': [23, 24]
-# })
+df = pd.DataFrame({
+    'EmpCode': ['Emp001', 'Emp002'],
+    'Name': ['John Doe', 'William Spark'],
+    'Occupation': ['Chemist', 'Statistician'],
+    'Date of Join': ['2018-01-25', '2018-01-26'],
+    'Age': [23, 24]
+})
 
 # 09 如何设置DataFrame的索引和列信息
-# df2 = pd.DataFrame(
-#     data={
-#         'EmpCode': ['Emp001', 'Emp002'],
-#         'Name': ['John Doe', 'William Spark'],
-#         'Occupation': ['Chemist', 'Statistician'],
-#         'Date of Join': ['2018-01-25', '2018-01-26'],
-#         'Age': [23, 24]
-#     },
-#     index=['first', 'second'],
-#     columns=['EmpCode', 'Occupation', 'Age', 'Name', 'Date of Join'] #可以调整顺序，但是名字必须和上面的data内容相符
-# )
+df2 = pd.DataFrame(
+    data={
+        'EmpCode': ['Emp001', 'Emp002'],
+        'Name': ['John Doe', 'William Spark'],
+        'Occupation': ['Chemist', 'Statistician'],
+        'Date of Join': ['2018-01-25', '2018-01-26'],
+        'Age': [23, 24]
+    },
+    index=['first', 'second'],
+    columns=['EmpCode', 'Occupation', 'Age', 'Name', 'Date of Join']  # 可以调整顺序，但是名字必须和上面的data内容相符
+)
 
 # 10 如何重命名DataFrame的列名称
-# df = pd.DataFrame({
-#     'EmpCode': ['Emp001', 'Emp002'],
-#     'Name': ['John Doe', 'William Spark'],
-#     'Occupation': ['Chemist', 'Statistician'],
-#     'Date of Join': ['2018-01-25', '2018-01-26'],
-#     'Age': [23, 24]
-# })
-# df.columns = ['Co1', 'Col2', 'Col3', 'Col4', 'Col5'] #长度必须和df的列数量相等
-# print(df)
+df.columns = ['Co1', 'Col2', 'Col3', 'Col4', 'Col5']  # 长度必须和df的列数量相等
+print(df)
 
 # 11 如何根据Pandas列中的值从DataFrame中选择或过滤行
-# df = pd.DataFrame({
-#     'EmpCode': ['Emp001', 'Emp002'],
-#     'Name': ['John Doe', 'William Spark'],
-#     'Occupation': ['Chemist', 'Statistician'],
-#     'Date of Join': ['2018-01-25', '2018-01-26'],
-#     'Age': [23, 24]
-# })
-# print(df.loc[((df['Age'] == 23) & (df.Occupation == 'Chemist')) | (df['Age'] == 24), 'EmpCode':'Occupation'])
+df = pd.DataFrame({
+    'EmpCode': ['Emp001', 'Emp002'],
+    'Name': ['John Doe', 'William Spark'],
+    'Occupation': ['Chemist', 'Statistician'],
+    'Date of Join': ['2018-01-25', '2018-01-26'],
+    'Age': [23, 24]
+})
+print(df.loc[((df['Age'] == 23) & (df.Occupation == 'Chemist')) | (df['Age'] == 24), 'EmpCode':'Occupation'])
 
 # 12 在DataFrame中使用“isin”过滤多行
-# df3 = pd.DataFrame({
-#     'EmpCode': ['Emp001', 'Emp002', 'Emp003', 'Emp004','Emp005'],
-#     'Name': ['John Doe', 'William Spark', 'Thomas Edison', 'Mark Johns', 'Harris Mac'],
-#     'Occupation': ['Chemist', 'Statistician', 'Pilot', 'Teacher', 'Accountant'],
-#     'Date of Join': ['2018-01-25', '2018-01-26', '2017-06-04', '2019-12-04', '2013-05-30'],
-#     'Age': [23, 24, 25, 23, 25]
-# })
-# print(df3.loc[df3['Age'].isin([24, 25])])
-# print(df3.loc[~df3['Age'].isin([24, 25])])
+df3 = pd.DataFrame({
+    'EmpCode': ['Emp001', 'Emp002', 'Emp003', 'Emp004','Emp005'],
+    'Name': ['John Doe', 'William Spark', 'Thomas Edison', 'Mark Johns', 'Harris Mac'],
+    'Occupation': ['Chemist', 'Statistician', 'Pilot', 'Teacher', 'Accountant'],
+    'Date of Join': ['2018-01-25', '2018-01-26', '2017-06-04', '2019-12-04', '2013-05-30'],
+    'Age': [23, 24, 25, 23, 25]
+})
+print(df3.loc[df3['Age'].isin([24, 25])])
+print(df3.loc[~df3['Age'].isin([24, 25])])
 
 # 13 迭代DataFrame的行和列
-# df3 = pd.DataFrame({
-#     'EmpCode': ['Emp001', 'Emp002', 'Emp003', 'Emp004','Emp005'],
-#     'Name': ['John Doe', 'William Spark', 'Thomas Edison', 'Mark Johns', 'Harris Mac'],
-#     'Occupation': ['Chemist', 'Statistician', 'Pilot', 'Teacher', 'Accountant'],
-#     'Date of Join': ['2018-01-25', '2018-01-26', '2017-06-04', '2019-12-04', '2013-05-30'],
-#     'Age': [23, 24, 25, 23, 25]
-# })
-# for index, col in df3.iterrows():
-#     # 按行依次输出
-#     print(index)
-#     print(col)
-#     print(col['Occupation'])
+df3 = pd.DataFrame({
+    'EmpCode': ['Emp001', 'Emp002', 'Emp003', 'Emp004','Emp005'],
+    'Name': ['John Doe', 'William Spark', 'Thomas Edison', 'Mark Johns', 'Harris Mac'],
+    'Occupation': ['Chemist', 'Statistician', 'Pilot', 'Teacher', 'Accountant'],
+    'Date of Join': ['2018-01-25', '2018-01-26', '2017-06-04', '2019-12-04', '2013-05-30'],
+    'Age': [23, 24, 25, 23, 25]
+})
+for index, col in df3.iterrows():
+    # 按行依次输出
+    print(index)
+    print(col)
+    print(col['Occupation'])
 
 # 14 如何通过名称或索引删除DataFrame的列
-# df3 = pd.DataFrame({
-#     'EmpCode': ['Emp001', 'Emp002', 'Emp003', 'Emp004','Emp005'],
-#     'Name': ['John Doe', 'William Spark', 'Thomas Edison', 'Mark Johns', 'Harris Mac'],
-#     'Occupation': ['Chemist', 'Statistician', 'Pilot', 'Teacher', 'Accountant'],
-#     'Date of Join': ['2018-01-25', '2018-01-26', '2017-06-04', '2019-12-04', '2013-05-30'],
-#     'Age': [23, 24, 25, 23, 25]
-# })
-# df3.drop(['Age', 'Date of Join'], axis=1, inplace=True) #基于 列名
-# df3.drop(df3.columns[[0, 2]], axis=1, inplace=True) #基于"列"的index
-# print(df3)
+df3 = pd.DataFrame({
+    'EmpCode': ['Emp001', 'Emp002', 'Emp003', 'Emp004', 'Emp005'],
+    'Name': ['John Doe', 'William Spark', 'Thomas Edison', 'Mark Johns', 'Harris Mac'],
+    'Occupation': ['Chemist', 'Statistician', 'Pilot', 'Teacher', 'Accountant'],
+    'Date of Join': ['2018-01-25', '2018-01-26', '2017-06-04', '2019-12-04', '2013-05-30'],
+    'Age': [23, 24, 25, 23, 25]
+})
+df3.drop(['Age', 'Date of Join'], axis=1, inplace=True) # 基于 列名
+df3.drop(df3.columns[[0, 2]], axis=1, inplace=True)  # 基于"列"的index
+print(df3)
 
 # 15 向DataFrame中新增列
-# df3 = pd.DataFrame({
-#     'EmpCode': ['Emp001', 'Emp002', 'Emp003', 'Emp004','Emp005'],
-#     'Name': ['John Doe', 'William Spark', 'Thomas Edison', 'Mark Johns', 'Harris Mac'],
-#     'Occupation': ['Chemist', 'Statistician', 'Pilot', 'Teacher', 'Accountant'],
-#     'Date of Join': ['2018-01-25', '2018-01-26', '2017-06-04', '2019-12-04', '2013-05-30'],
-#     'Age': [23, 24, 25, 23, 25]
-# })
-# df3['City'] = ['London', 'Tokyo', 'Sydney', 'London', 'Toronto']
-# print(df3)
+df3 = pd.DataFrame({
+    'EmpCode': ['Emp001', 'Emp002', 'Emp003', 'Emp004','Emp005'],
+    'Name': ['John Doe', 'William Spark', 'Thomas Edison', 'Mark Johns', 'Harris Mac'],
+    'Occupation': ['Chemist', 'Statistician', 'Pilot', 'Teacher', 'Accountant'],
+    'Date of Join': ['2018-01-25', '2018-01-26', '2017-06-04', '2019-12-04', '2013-05-30'],
+    'Age': [23, 24, 25, 23, 25]
+})
+df3['City'] = ['London', 'Tokyo', 'Sydney', 'London', 'Toronto']
+print(df3)
 
 # 16 如何从DataFrame中获取列标题列表
-# df3 = pd.DataFrame({
-#     'EmpCode': ['Emp001', 'Emp002', 'Emp003', 'Emp004','Emp005'],
-#     'Name': ['John Doe', 'William Spark', 'Thomas Edison', 'Mark Johns', 'Harris Mac'],
-#     'Occupation': ['Chemist', 'Statistician', 'Pilot', 'Teacher', 'Accountant'],
-#     'Date of Join': ['2018-01-25', '2018-01-26', '2017-06-04', '2019-12-04', '2013-05-30'],
-#     'Age': [23, 24, 25, 23, 25]
-# })
-# print(list(df3))
-# print(df3.columns.tolist())
-# print(list(df3.columns.values))
+df3 = pd.DataFrame({
+    'EmpCode': ['Emp001', 'Emp002', 'Emp003', 'Emp004','Emp005'],
+    'Name': ['John Doe', 'William Spark', 'Thomas Edison', 'Mark Johns', 'Harris Mac'],
+    'Occupation': ['Chemist', 'Statistician', 'Pilot', 'Teacher', 'Accountant'],
+    'Date of Join': ['2018-01-25', '2018-01-26', '2017-06-04', '2019-12-04', '2013-05-30'],
+    'Age': [23, 24, 25, 23, 25]
+})
+print(list(df3))
+print(df3.columns.tolist())
+print(df3.columns.to_list())
 
 # 17 如何随机生成DataFrame
-# df_random = pd.DataFrame(np.random.randint(100, size=(10, 6)),
-#                          columns=list('ABCDEF'),
-#                          index=['Row-{}'.format(i) for i in range(10)])
-# print(df_random)
+df_random = pd.DataFrame(np.random.randint(100, size=(10, 6)),
+                         columns=list('ABCDEF'),
+                         index=['Row-{}'.format(i) for i in range(10)])
+print(df_random)
 
 # 18 如何选择DataFrame的多个列
-# df3 = pd.DataFrame({
-#     'EmpCode': ['Emp001', 'Emp002', 'Emp003', 'Emp004','Emp005'],
-#     'Name': ['John Doe', 'William Spark', 'Thomas Edison', 'Mark Johns', 'Harris Mac'],
-#     'Occupation': ['Chemist', 'Statistician', 'Pilot', 'Teacher', 'Accountant'],
-#     'Date of Join': ['2018-01-25', '2018-01-26', '2017-06-04', '2019-12-04', '2013-05-30'],
-#     'Age': [23, 24, 25, 23, 25]
-# })
-# print(df3[['EmpCode', 'Age', 'Name']])
+df3 = pd.DataFrame({
+    'EmpCode': ['Emp001', 'Emp002', 'Emp003', 'Emp004','Emp005'],
+    'Name': ['John Doe', 'William Spark', 'Thomas Edison', 'Mark Johns', 'Harris Mac'],
+    'Occupation': ['Chemist', 'Statistician', 'Pilot', 'Teacher', 'Accountant'],
+    'Date of Join': ['2018-01-25', '2018-01-26', '2017-06-04', '2019-12-04', '2013-05-30'],
+    'Age': [23, 24, 25, 23, 25]
+})
+print(df3[['EmpCode', 'Age', 'Name']])
 
 # 19 如何将字典转换为DataFrame
-# df3 = {
-#     'EmpCode': ['Emp001', 'Emp002', 'Emp003', 'Emp004','Emp005'],
-#     'Name': ['John Doe', 'William Spark', 'Thomas Edison', 'Mark Johns', 'Harris Mac'],
-#     'Occupation': ['Chemist', 'Statistician', 'Pilot', 'Teacher', 'Accountant'],
-#     'Date of Join': ['2018-01-25', '2018-01-26', '2017-06-04', '2019-12-04', '2013-05-30'],
-#     'Age': [23, 24, 25, 23, 25]
-# }
-# df3 = pd.DataFrame(df3)
-# print(df3)
+df3 = {
+    'EmpCode': ['Emp001', 'Emp002', 'Emp003', 'Emp004','Emp005'],
+    'Name': ['John Doe', 'William Spark', 'Thomas Edison', 'Mark Johns', 'Harris Mac'],
+    'Occupation': ['Chemist', 'Statistician', 'Pilot', 'Teacher', 'Accountant'],
+    'Date of Join': ['2018-01-25', '2018-01-26', '2017-06-04', '2019-12-04', '2013-05-30'],
+    'Age': [23, 24, 25, 23, 25]
+}
+df3 = pd.DataFrame(df3)
+print(df3)
 
 # 20 使用loc进行切片
-# df3 = pd.DataFrame({
-#     'EmpCode': ['Emp001', 'Emp002', 'Emp003', 'Emp004','Emp005'],
-#     'Name': ['John Doe', 'William Spark', 'Thomas Edison', 'Mark Johns', 'Harris Mac'],
-#     'Occupation': ['Chemist', 'Statistician', 'Pilot', 'Teacher', 'Accountant'],
-#     'Date of Join': ['2018-01-25', '2018-01-26', '2017-06-04', '2019-12-04', '2013-05-30'],
-#     'Age': [23, 24, 25, 23, 25],
-# },
-# index=['first', 'second', 'third', 'fourth', 'fifth'])
-# print(df3.loc[['third','fifth']])
-# print(df3.loc['third':'fifth'])
+df3 = pd.DataFrame(
+    data={'EmpCode': ['Emp001', 'Emp002', 'Emp003', 'Emp004','Emp005'],
+          'Name': ['John Doe', 'William Spark', 'Thomas Edison', 'Mark Johns', 'Harris Mac'],
+          'Occupation': ['Chemist', 'Statistician', 'Pilot', 'Teacher', 'Accountant'],
+          'Date of Join': ['2018-01-25', '2018-01-26', '2017-06-04', '2019-12-04', '2013-05-30'],
+          'Age': [23, 24, 25, 23, 25]},
+    index=['first', 'second', 'third', 'fourth', 'fifth']
+)
+print(df3.loc[['third', 'fifth']])
+print(df3.loc['third':'fifth'])
 
 # 21 检查DataFrame中是否为空
-# df4 = pd.DataFrame()
-# if df4.empty:
-#     print('This DataFrame is empty!')
+df4 = pd.DataFrame()
+if df4.empty:
+    print('This DataFrame is empty!')
 
 # 22 在创建DataFrame时指定索引和列名称
-# values = ['Zhabei', 'Hongkou', 'Pudong', 'Putuo']
-# code = ['ZB', 'HK', 'PD', 'PT']
-# df5 = pd.DataFrame(
-#     values,
-#     index=code,
-#     columns=['District']
-# )
-# print(df5)
+values = ['Zhabei', 'Hongkou', 'Pudong', 'Putuo']
+code = ['ZB', 'HK', 'PD', 'PT']
+df5 = pd.DataFrame(
+    values,
+    index=code,
+    columns=['District']
+)
+print(df5)
 
 # 23 使用iloc进行切片
-# df3 = pd.DataFrame({
-#     'EmpCode': ['Emp001', 'Emp002', 'Emp003', 'Emp004','Emp005'],
-#     'Name': ['John Doe', 'William Spark', 'Thomas Edison', 'Mark Johns', 'Harris Mac'],
-#     'Occupation': ['Chemist', 'Statistician', 'Pilot', 'Teacher', 'Accountant'],
-#     'Date of Join': ['2018-01-25', '2018-01-26', '2017-06-04', '2019-12-04', '2013-05-30'],
-#     'Age': [23, 24, 25, 23, 25],
-# },
-# index=['first', 'second', 'third', 'fourth', 'fifth'])
-# print(df3.iloc[2])
-# print(df3.iloc[2:4]) #前闭后开，即第三行 至 第四行
-# print(df3.iloc[4::-1]) #从第五行 至 第一行 依次one by one输出
+df3 = pd.DataFrame(
+    data={'EmpCode': ['Emp001', 'Emp002', 'Emp003', 'Emp004','Emp005'],
+          'Name': ['John Doe', 'William Spark', 'Thomas Edison', 'Mark Johns', 'Harris Mac'],
+          'Occupation': ['Chemist', 'Statistician', 'Pilot', 'Teacher', 'Accountant'],
+          'Date of Join': ['2018-01-25', '2018-01-26', '2017-06-04', '2019-12-04', '2013-05-30'],
+          'Age': [23, 24, 25, 23, 25]},
+    index=['first', 'second', 'third', 'fourth', 'fifth']
+)
+print(df3.iloc[2])
+print(df3.iloc[2:4])  # 前闭后开，即第三行 至 第四行
+print(df3.iloc[4::-1])  # 从第五行 至 第一行 依次one by one输出
 
 # 24 iloc和loc的区别
 # loc索引器可以进行布尔选择；iloc也可以复制他，但不能将它传递给一个布尔系列，必须将布尔系列转换为numpy数组
-# df3 = pd.DataFrame({
-#     'EmpCode': ['Emp001', 'Emp002', 'Emp003', 'Emp004','Emp005'],
-#     'Name': ['John Doe', 'William Spark', 'Thomas Edison', 'Mark Johns', 'Harris Mac'],
-#     'Occupation': ['Chemist', 'Statistician', 'Pilot', 'Teacher', 'Accountant'],
-#     'Date of Join': ['2018-01-25', '2018-01-26', '2017-06-04', '2019-12-04', '2013-05-30'],
-#     'Age': [23, 24, 25, 23, 25],
-# },
-# index=['first', 'second', 'third', 'fourth', 'fifth'])
-# print(df3.loc[df3['Age']>24, ['Name', 'Age']])
-# print(df3.iloc[(df3['Age']>24).values, [1, 3]])
+df3 = pd.DataFrame(
+    data={'EmpCode': ['Emp001', 'Emp002', 'Emp003', 'Emp004','Emp005'],
+          'Name': ['John Doe', 'William Spark', 'Thomas Edison', 'Mark Johns', 'Harris Mac'],
+          'Occupation': ['Chemist', 'Statistician', 'Pilot', 'Teacher', 'Accountant'],
+          'Date of Join': ['2018-01-25', '2018-01-26', '2017-06-04', '2019-12-04', '2013-05-30'],
+          'Age': [23, 24, 25, 23, 25]},
+    index=['first', 'second', 'third', 'fourth', 'fifth']
+)
+print(df3.loc[df3['Age'] > 24, ['Name', 'Age']])
+print(df3.iloc[(df3['Age'] > 24).values, [1, 3]])
 
 # 25 使用时间索引创建空DataFrame
-# todays_date = datetime.datetime.now().date()
-# index = pd.date_range(todays_date, periods=10, freq='D')
-# columns = ['A', 'B', 'C']
-# df5 = pd.DataFrame(index=index, columns=columns)
-# df5 = df5.fillna(0)
-# print(df5)
+todays_date = datetime.datetime.now().date()
+index = pd.date_range(todays_date, periods=10, freq='D')
+columns = ['A', 'B', 'C']
+df5 = pd.DataFrame(index=index, columns=columns)
+df5 = df5.fillna(0)
+print(df5)
 
 # 26 如何改变DataFrame列的排序
-# df6 = pd.DataFrame({
-#     'Age': [30, 20, 22, 40, 32,28, 39],
-#     'Color': ['Blue','Green', 'Red', 'White', 'Gray', 'Black', 'Red'],
-#     'Food': ['Steak', 'Lamb', 'Mango', 'Apple', 'Cheese', 'Melon', 'Beans'],
-#     'Height': [165, 70, 120, 80, 100, 172, 50],
-#     'Score': [4.6, 8.3, 9.0, 3.3, 1.8, 9.5, 2.2],
-#     'State': ['NY', 'TX', 'FL', 'AL', 'AK', 'TX', 'TX']
-# },
-# index=['Jane', 'Nick', 'Aaron', 'Penelop', 'Dean', 'Christina', 'Cornelia'])
-# df6 = df6.reindex(['State', 'Color', 'Age', 'Food', 'Score', 'Height'], axis=1)
-# df6 = df6[df6.columns[[3, 2, 1, 4, 5, 0]]]
+df6 = pd.DataFrame(
+    data={
+        'Age': [30, 20, 22, 40, 32,28, 39],
+        'Color': ['Blue','Green', 'Red', 'White', 'Gray', 'Black', 'Red'],
+        'Food': ['Steak', 'Lamb', 'Mango', 'Apple', 'Cheese', 'Melon', 'Beans'],
+        'Height': [165, 70, 120, 80, 100, 172, 50],
+        'Score': [4.6, 8.3, 9.0, 3.3, 1.8, 9.5, 2.2],
+        'State': ['NY', 'TX', 'FL', 'AL', 'AK', 'TX', 'TX']},
+    index=['Jane', 'Nick', 'Aaron', 'Penelop', 'Dean', 'Christina', 'Cornelia']
+)
+df6 = df6.reindex(['State', 'Color', 'Age', 'Food', 'Score', 'Height'], axis=1)
+df6 = df6[df6.columns[[3, 2, 1, 4, 5, 0]]]
 
 # 27 检查DataFrame列的数据类型
-# df3 = pd.DataFrame({
-#     'EmpCode': ['Emp001', 'Emp002', 'Emp003', 'Emp004','Emp005'],
-#     'Name': ['John Doe', 'William Spark', 'Thomas Edison', 'Mark Johns', 'Harris Mac'],
-#     'Occupation': ['Chemist', 'Statistician', 'Pilot', 'Teacher', 'Accountant'],
-#     'Date of Join': ['2018-01-25', '2018-01-26', '2017-06-04', '2019-12-04', '2013-05-30'],
-#     'Age': [23, 24, 25, 23, 25],
-# },
-# index=['first', 'second', 'third', 'fourth', 'fifth'])
-# print(df3.dtypes)
+df3 = pd.DataFrame(
+    data={'EmpCode': ['Emp001', 'Emp002', 'Emp003', 'Emp004','Emp005'],
+          'Name': ['John Doe', 'William Spark', 'Thomas Edison', 'Mark Johns', 'Harris Mac'],
+          'Occupation': ['Chemist', 'Statistician', 'Pilot', 'Teacher', 'Accountant'],
+          'Date of Join': ['2018-01-25', '2018-01-26', '2017-06-04', '2019-12-04', '2013-05-30'],
+          'Age': [23, 24, 25, 23, 25]},
+    index=['first', 'second', 'third', 'fourth', 'fifth']
+)
+print(df3.dtypes)
 
 # 28 更改DataFrame指定列的数据类型
-# df3 = pd.DataFrame({
-#     'EmpCode': ['Emp001', 'Emp002', 'Emp003', 'Emp004','Emp005'],
-#     'Name': ['John Doe', 'William Spark', 'Thomas Edison', 'Mark Johns', 'Harris Mac'],
-#     'Occupation': ['Chemist', 'Statistician', 'Pilot', 'Teacher', 'Accountant'],
-#     'Date of Join': ['2018-01-25', '2018-01-26', '2017-06-04', '2019-12-04', '2013-05-30'],
-#     'Age': [23, 24, 25, 23, 25],
-# },
-# index=['first', 'second', 'third', 'fourth', 'fifth'])
-# df3['Age'] = df3['Age'].astype(str)
-# print(df3.dtypes)
+df3 = pd.DataFrame(
+    data={'EmpCode': ['Emp001', 'Emp002', 'Emp003', 'Emp004','Emp005'],
+          'Name': ['John Doe', 'William Spark', 'Thomas Edison', 'Mark Johns', 'Harris Mac'],
+          'Occupation': ['Chemist', 'Statistician', 'Pilot', 'Teacher', 'Accountant'],
+          'Date of Join': ['2018-01-25', '2018-01-26', '2017-06-04', '2019-12-04', '2013-05-30'],
+          'Age': [23, 24, 25, 23, 25]},
+    index=['first', 'second', 'third', 'fourth', 'fifth']
+)
+df3['Age'] = df3['Age'].astype(str)
+print(df3.dtypes)
 
 # 29 如何将列的数据类型转换为DateTime类型
-# df7 = pd.DataFrame({
-#     'Dateofbirth': [
-#         1349720105,
-#         1233123123,
-#         1232343343,
-#         1254693743,
-#         1847394574
-#     ]
-# })
-# print(df7.dtypes)
-# df7['Dateofbirth'] = pd.to_datetime(df7['Dateofbirth'], unit='s')
-# print(df7)
-# print(df7.dtypes)
+df7 = pd.DataFrame({
+    'Dateofbirth': [
+        1349720105,
+        1233123123,
+        1232343343,
+        1254693743,
+        1847394574
+    ]
+})
+print(df7.dtypes)
+df7['Dateofbirth'] = pd.to_datetime(df7['Dateofbirth'], unit='s')
+print(df7)
+print(df7.dtypes)
 
 # 30 将DataFrame列从floats转为ints
-# df8 = pd.DataFrame({
-#     'DailyExp': [74.5, 25.5, 85.8, 64.3, 78.1]
-# })
-# df8['DailyExp'] = df8['DailyExp'].astype(int)
-# print(df8)
+df8 = pd.DataFrame({
+    'DailyExp': [74.5, 25.5, 85.8, 64.3, 78.1]
+})
+df8['DailyExp'] = df8['DailyExp'].astype(int)
+print(df8)
 
 # 31 如何把dates列转换为DateTime类型
 # 跳过 .astype('datetime64')
