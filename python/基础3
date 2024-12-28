@@ -19,7 +19,9 @@ print(mappings)
 # 使用集合推导式去除重复元素
 items = [1, 2, 2, 3, 1, 4, 6, 4]
 unique_items = {item for item in items}
+unique_items2 = set(items)
 print(unique_items)
+print(unique_items2)
 
 # 使用zip并行遍历多个序列
 names = ['alice', 'bob', 'thomas']
