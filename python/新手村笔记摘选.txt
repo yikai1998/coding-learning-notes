@@ -1,0 +1,158 @@
+【杂七杂八】
+加速下载package
+pip install -i https://pypi.tuna.tsinghua.edu.cn/simple/pygal
+
+
+【常用运算符】
+% 取模 
+** 幂（返回X的Y次幂） 
+a**b为‘a的b次方’ 
+// 取整除 
+
+
+【字符串】
+print有一个参数end,默认是\n，可以改 
+print(1, end = '') 
+查找子字符串在大字符串的哪个位置 
+print(msg.find('hello')) 
+找到则返回找到字符的起始索引，没找到则返回 -1（不会报错） 
+与index用法完全相同，但是index如果没找到，会报错 
+rindex() 方法返回子字符串最后一次出现在字符串中的索引位置，该方法与 rfind() 方法一样，只不过如果子字符串不在字符串中会报一个异常。 
+
+
+【列表】
+往列表末尾增加"一个"元素 
+msg.append('b') 
+往指定索引位置的前面插入"一个"元素 
+msg.insert(0,'aa') 
+lista.insert(1, ['insert', 'one'])  # ['hello', ['insert', 'one'], 'world', 123]
+往列表的末尾插入"多个"元素（输入形式为列表） 
+lista = ['hello', 'world', 123]
+lista.extend(['na', 'nm'])
+lista.extend([['na', 'nm']])
+lista.append(['na', 'nm'])
+# ['hello', 'world', 123, 'na', 'nm', ['na', 'nm'], ['na', 'nm']]
+
+删除的三种方法
+del msg[0] 
+msg.remove('qqq') 
+msg.pop() 默认是-1，即最后一个元素 
+
+清空列表 
+msg = msg.clear 
+msg.clear()
+
+
+【字典】
+value可以是任意的数据类型 
+key通常应该是字符串类型 
+用pop剔除，返回值是value。（实质上就是拿走了字典的value） 
+popitem 剔除最后一对键值对. 返回值是一个元组  
+print(info['name'])  如果没这个key会报错 
+print(info.get('xxx')) 如果没这个key会返回none，不会报错 
+
+
+【函数】
+函数的使用必须遵循先定义，后调用的原则 
+函数的定义阶段仅检测函数体的语法，不会执行 
+函数的调用阶段：函数名 + () 
+return是一个函数结束的标志，函数内可以有多个return 
+return的返回值无类型限制 
+0个return：返回None 
+1个return：返回的值就是该值本身 
+多个return：返回值是元组。如果想修改，外面加一个list就行，如 return [1, 2, 4]
+
+在定义函数时，*代表收集参数，**代表收集关键字参数 
+*将调用时提供的所有值，放在一个元组里 
+def functiona(*params):
+    print(params)
+def functionb(**kwargs):
+    print(kwargs)
+functiona('hello', 'world')  # ('hello', 'world')
+functionb(worda='hello', worldb='world')  # {'worda': 'hello', 'worldb': 'world'}
+
+#里面函数得在外面函数运行之后再运行 
+def first(): 
+    print('aaa') 
+    
+    def second(): 
+        print('bbb') 
+
+    return second 
+
+mid = first() 
+mid() 
+
+输出结果： 
+aaa 
+bbb 
+
+# 同下
+def first(func):
+    def wrap():
+        print('aaa')
+        func()
+    return wrap
+
+@first
+def second():
+    print('bbb')
+
+second()
+输出结果：
+aaa
+bbb
+
+我们可以将参数设置一个默认值，如果我们不填这个参数，那么这个值就是这个默认值。 
+有默认值了的形参要放到后面 把没有默认值的形参放到前面 
+*args 会把多输入的参数变成一个元组形式，需放在末尾 
+**kargs 把传入的参数以键值对的形式存放到字典里 
+def stu_register(name, age, course, *args, **kwargs):
+    print(name, age, course, args, kwargs)
+    print(f'Your Info: {args}')
+    print(f'Your Info: {kwargs}')
+
+stu_register('ben', 18, ' Math', 'CN', 'JP', hometown=['Shanghai', 'Anhui'], gender='Male')
+# 这里不能画蛇添足写name='ben'之类的补足
+# 你如果写成了stu_register(name='ben', age=18, course=' Math', args=('CN', 'JP'), hometown=['Shanghai', 'Anhui'], gender='Male')
+# 则返回下面这个结果，明显不符合你的预期
+ben 18  Math () {'args': ('CN', 'JP'), 'hometown': ['Shanghai', 'Anhui'], 'gender': 'Male'}
+Your Info: ()
+Your Info: {'args': ('CN', 'JP'), 'hometown': ['Shanghai', 'Anhui'], 'gender': 'Male'}
+
+局部变量只在函数内部有效。函数已结束，这些变量也会跟着被释放掉 
+变量的查找顺序：局部变量>全局变量 
+函数中是无法修改全局变量的（如果硬要修改，可以在函数中用"global xxx"，即声明一个全局变量） 
+name = 'ben chen'
+def change_name():
+    name = 'jack wang'
+    print(f'my name is {name}')
+
+change_name()
+print(name)
+结果是
+my name is jack wang
+ben chen
+
+使用了global后
+name = 'ben chen'
+def change_name():
+    global name
+    name = 'jack wang'
+    print(f'my name is {name}')
+
+change_name()
+print(name)
+结果是
+my name is jack wang
+jack wang
+
+# 这种办法可以改变全局变量
+book_list = ['world travel', 'the second war', 'football']
+
+def update_books(l):
+    l.append('poem')
+
+update_books(book_list)
+print(book_list)
+输出 ['world travel', 'the second war', 'football', 'poem']
