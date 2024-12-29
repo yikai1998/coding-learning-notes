@@ -156,3 +156,55 @@ def update_books(l):
 update_books(book_list)
 print(book_list)
 输出 ['world travel', 'the second war', 'football', 'poem']
+
+
+【爬虫】
+import requests
+import os
+desktop = os.path.join(os.path.expanduser('~'), 'Desktop')
+headers = {
+    'User-Agent': 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Mobile Safari/537.36'
+}
+url = 'https://pic6.iqiyipic.com/image/20210916/1c/3f/v_108557140_m_601_m11_480_270.jpg?caplist=jpg,webp'
+param = {
+    'if': 'defaultQuery',
+    'response_type': 2,
+    'platform': 14,
+    'is_qipu_platform': 1,
+    'u': '3d6a60f7d9bac768fc1ee57fbd7cad8c',
+    'cid': 0,
+    'pu': '2064803180'
+}
+response = requests.get(url=url, params=param, headers=headers).content
+# content返回的是二进制格式的图片数据
+with open(f'{desktop}\\img.jpg', 'wb') as f:
+    f.write(response)
+
+bs4进行数据分析
+实例化一个beautifulsoup对象，并将页面源码数据加载到该对象中。通过调用beautifulsoup对象中相关的属性或方法进行标签定位和数据提取。
+from bs4 import BeautifulSoup
+response = requests.get(url=url, headers=headers).text
+soup = BeautifulSoup(response, 'lxml')
+soup.tagName #返回文档中第一次出现的tagName对应的标签
+soup.find() #e.g. soup.find('div',class_='song') 
+soup.find_all() #返回符合要求的所有标签（列表）
+soup.select('.tang') #输入某种选择器，返回一个列表
+soup.select('.tang>ul>li>a') #层级选择器，>表示一个层级，(空格 表示多个层级，所以也可以写成soup.select('.tang>ul a')）
+soup.a.text/string/get_text() #获取标签之间的文本数据
+soup.a['href']#获取标签中的属性值
+
+xpath解析
+最常用，最高效，且通用性最高
+实例化一个etree的对象，且需要将被解析的页面源码数据加载到该对象中。结合着xpath方法，表达式。
+from lxml import etree
+parser = etree.HTMLParser(encoding="utf-8")
+tree = etree.parse(r'C:\Users\Ben\Desktop\cosmetic_test.html', parser=parser)
+r = tree.xpath('/html/body/div/table/tr[2]//text()')
+xpath表达式：
+'/' 表示一个层级
+'//' 表示（从任意位置开始）多个层级
+'/[@xxx="xxxx"]' 表示 属性定位
+索引定位是从1开始的
+'/text()' 可以获取标签中的直系文本内容
+'//text()' 可以获取标签中的非直系文本内容（即：该标签下所有文本内容）#'/html/body/div/table/tr[2]//text()')
+'/@属性名称'   # image/@src 可以返回对应的属性值
