@@ -208,3 +208,35 @@ xpath表达式：
 '/text()' 可以获取标签中的直系文本内容
 '//text()' 可以获取标签中的非直系文本内容（即：该标签下所有文本内容）#'/html/body/div/table/tr[2]//text()')
 '/@属性名称'   # image/@src 可以返回对应的属性值
+
+
+【内置函数】
+abs()  # 取绝对值
+all([, , , ,……])  # 所有都是True才返回True。0和None等同于False
+any([, , , ,……])  # 任意一个是True则返回True
+chr()  # 传ASCII码进去，打印出来字符
+ord()  # 传字符进去，打印出来ASCII码
+dict()  # 生成一个空字典，或将括号里的内容转换成字典
+dir()  # 打印当前程序环境下内存里的所有变量，在一个列表里
+locals()  # 打印当前程序的所有变量名及变量值,，在一个字典里
+map()  # 把将一个可遍历的数据对象中的每一元素丢给某个函数运行
+enumerate()  # 用于将一个可遍历的数据对象(如列表、元组或字符串)组合为一个索引序列，同时列出数据和数据下标，一般用在 for 循环当中
+filter()  # 该接收两个参数，第一个为函数，第二个为序列，序列的每个元素作为参数传递给函数进行判断，然后返回 True 或 False，最后将返回 True 的元素放到新列表中
+eval() #用来执行一个字符串表达式，并返回表达式的值
+e.g. eval('2 + 2') 返回4
+
+
+【模块和包】
+import module_a  # 导入
+from module import xx  # 导入某个模块下的某个方法或子模块
+from module.xx.xx import xx as rename  # 导入某个方法后重命名
+from module.xx.xx import *  # 导入一个模块下的所有方法
+module_a.xxx  # 调用
+
+只要import，就相当于执行了那个module的py文件
+
+__file__  # 当前脚本的路径
+__file__  # 当前脚本的文件夹路径
+sys.path  # 模块的查找路径
+
+
