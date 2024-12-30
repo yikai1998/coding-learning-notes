@@ -209,6 +209,58 @@ xpath表达式：
 '//text()' 可以获取标签中的非直系文本内容（即：该标签下所有文本内容）#'/html/body/div/table/tr[2]//text()')
 '/@属性名称'   # image/@src 可以返回对应的属性值
 
+selenium
+selenium 是一个浏览器自动化模块，可以非常便捷的获取网站中动态加载的数据、便捷实现模拟登录
+
+# 小试牛刀——遍历药监局首页的企业名单
+from selenium import webdriver
+from lxml import etree
+bro = webdriver.Chrome(executable_path='./chromedriver.exe')
+bro.get('http://scxk.nmpa.gov.cn:81/xk/')
+page_text = bro.page_source
+tree = etree.HTML(page_text)
+li_list = tree.xpath('//ul[@id="gzlist"]/li')
+for i in li_list:
+    print(i.xpath('./dl/@title')[0])
+bro.quit()
+
+# 模拟保持登陆状态
+from selenium import webdriver
+import time
+import json
+bro = webdriver.Chrome(executable_path='./chromedriver.exe')
+bro.get('https://www.chinaacc.com/')
+# time.sleep(20)
+# bro.refresh()
+time.sleep(10)
+ff = open(r'C:\Users\Ben\Desktop\试试看.text',mode='r')
+cookieslist = json.load(ff)
+for cookie in cookieslist:
+    bro.add_cookie(cookie)
+ff.close()
+time.sleep(5)
+bro.refresh()
+# ff.write(json.dumps(bro.get_cookies()))
+
+ # selenium处理iframe
+iframe： 当前页面所嵌套的一个子页面。 如果被定位的标签在iframe中，是无法被直接找到的。要先 bro.switch_to.frame('')
+
+# 无头浏览器+规避检测
+from selenium import webdriver
+import time
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver import ChromeOptions
+chrome_options = Options()
+chrome_options.add_argument('--headless')
+chrome_options.add_argument('--disable-gpu')
+option = ChromeOptions()
+option.add_experimental_option('excludeSwitches',['enable-automation'])
+bro = webdriver.Chrome(executable_path='./chromedriver.exe',chrome_options=chrome_options,options=option)
+time.sleep(2)
+content = bro.get('http://www.baidu.com')
+print(bro.page_source)
+bro.quit()
+
 
 【内置函数】
 abs()  # 取绝对值
@@ -240,3 +292,81 @@ __file__  # 当前脚本的文件夹路径
 sys.path  # 模块的查找路径
 
 
+【debug】
+import pdb
+运行代码，程序会自动在pdb.set_trace()暂停并进入pdb调试环境，可以用命令p查看变量，或者用命令c继续运行
+
+
+【数据可视化】
+import matplotlib.pyplot as plt
+# 折线图 & 散点图
+sq = [1,4,9,16,25,36,49,64,81,100]
+plt.plot(range(0,10),sq, linewidth=2,color='black')
+plt.plot(range(0,10),[1,2,3,4,5,6,7,8,9,10], linewidth=2)
+plt.scatter(list(range(0,10)),[4,4,5,6,5,4,10,5,4,11],s=40,c=[4,4,5,6,5,4,10,5,4,11],cmap=plt.cm.Greens)
+plt.title('This is my first python chart!')
+plt.xlabel('value',fontsize=24)
+plt.ylabel('square_value',fontsize=24)
+# plt.tick_params(axis='x',which='major',labelsize=14)
+plt.savefig('C:/Users/Ben/Desktop/test_2.png',bbox_inches='tight')
+
+# 柱状图
+ylist = [9,4,7,3,4]
+b1 = plt.bar([1,3,5,7,9],ylist,width=0.5,color='red')
+b2 = plt.bar([1.5,3.5,5.5,7.5,9.5],[1,1,1,1,1],bottom=ylist,width=0.5)
+plt.scatter([1,2,3],[1,4,9],c='blue')
+plt.plot([1,2,3,4,5,6],[1,2,3,4,5,6],color='green')
+plt.show()
+
+# 饼图
+labels = ['CN', 'US', 'UK', 'DE', 'JP']
+X = [222,289,123,184,200]
+expl = [0,0.1,0,0,0]
+plt.pie(X, labels=labels, autopct='%1.2f%%', explode=expl)
+plt.title('Hello Pie!')
+plt.show()
+
+
+【邮件】
+SMTP: Simple Mail Transfer Protocol 简单邮件传输协议，用来控制信件的中转方式
+Python对SMTP支持有smtplib和email两个模块，email负责构造文件，smtplib负责发送邮件 
+
+import smtplib
+from email.mime.text import MIMEText #邮件正文
+from email.header import Header #邮件头
+smtp_obj = smtplib.SMTP_SSL("smtp.qq.com",465)
+smtp_obj.login('1079041327@qq.com','qgzlpoiwcegjicee')
+for i in ['清华','北京','哈佛','家里蹲']:
+    msg = MIMEText(f'恭喜你薛狗！你已经被{i}大学录取啦！！！\n奥里给！！！', 'plain', 'utf-8')
+    msg['From'] = Header('陈校长', 'utf-8')
+    msg['To'] = Header('ddrid先生', 'utf-8')
+    msg['Subject'] = Header(f'OFFER LETTER', 'utf-8')
+    smtp_obj.sendmail('1079041327@qq.com',['2821566237@qq.com'],msg.as_string())
+smtp_obj = smtplib.SMTP_SSL("smtp.qq.com",465)
+smtp_obj.login('1079041327@qq.com','qgzlpoiwcegjicee')
+mail_msg = """
+<p>Python 邮件发送测试...</p>
+<p><a href="http://www.bilibili.com">这是一个链接</a></p>
+"""
+msg = MIMEText(mail_msg,'html','utf-8')
+msg['From'] = Header('陈校长', 'utf-8')
+msg['To'] = Header('蒋女士', 'utf-8')
+msg['Subject'] = Header(f'你是猪', 'utf-8')
+smtp_obj.sendmail('1079041327@qq.com',['857871355@qq.com'],msg.as_string())
+
+import smtplib
+from email.mime.text import MIMEText #邮件正文
+from email.mime.multipart import MIMEMultipart #发送带附件的邮件，首先要创建MIMEMultipart()实例，然后构造附件，如果有多个附件，可依次构造，最后利用smtplib.smtp发送。
+from email.header import Header #邮件头
+smtp_obj = smtplib.SMTP_SSL("smtp.qq.com",465)
+smtp_obj.login('1079041327@qq.com','qgzlpoiwcegjicee')
+msg = MIMEMultipart()
+msg.attach(MIMEText('风华初火影四大高手之一——DDRID同学，你好！请查收附件\n不好意思，第一封邮件好像有点问题哈哈哈哈~~~','plain','utf-8'))
+att1 = MIMEText(open(r'C:\Users\Ben\Desktop\hello jlj.txt','rb').read(),'bse64','utf-8')
+att1["Content-Type"] = 'application/octet-stream'
+att1["Content-Disposition"] = 'attachment; filename="confidential file.txt"'
+msg.attach(att1)
+msg['From'] = Header('凯逼', 'utf-8')
+msg['To'] = Header('薛狗', 'utf-8')
+msg['Subject'] = Header(f'薛狗の密件', 'utf-8')
+smtp_obj.sendmail('1079041327@qq.com',['857871355@qq.com','2821566237@qq.com'],msg.as_string())
