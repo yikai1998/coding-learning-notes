@@ -71,3 +71,67 @@ Applying another behavior parameter to function multiply
 Applying special behavior parameter to function div
 6.125
 '''
+
+
+# 实操场景1
+def search_datacenter(accountid=None, legalentityid=None):
+    url = 'https://airboard-ng.airwallex.com/graphql/kyc'
+    config.awx_headers['x-data-center'] = 'HK'  # reset to be default
+    if accountid is None:
+        caseInfo = {
+            'operationName': 'getLegalEntityList',
+            'query': 'query xxxx',
+            'variables': {
+                'params': {
+                    'client_legal_entity_id': legalentityid,
+                    'from': 0,
+                    'size': 10,
+                }
+            }
+        }
+    else:
+        caseInfo = {
+            'operationName': 'getLegalEntityList',
+            'query': 'query xxxx',
+            'variables': {
+                'params': {
+                    'account_id': accountid,
+                    'from': 0,
+                    'size': 10,
+                }
+            }
+        }
+    r = requests.post(url=url, data=json.dumps(caseInfo), headers=config.awx_headers).text
+    r = r.replace('false', 'False').replace('null', 'None').replace('true', 'True')
+    r = ast.literal_eval(r)
+    return r['data']['getLegalEntityList']['total']
+
+def datacenter_decorator(func):
+    def wrapper(*args, **kwargs):
+        accountid = kwargs.get('accountid')
+        legalentityid = kwargs.get('legalentityid')
+        datacenter = 'HK' if search_datacenter(accountid=accountid, legalentityid=legalentityid) > 0 else 'SG'
+        kwargs['datacenter'] = datacenter
+        return func(*args, **kwargs)
+    return wrapper
+
+@datacenter_decorator
+def get_LegalEntityId(datacenter, accountid):
+    url = 'https://airboard-ng.airwallex.com/graphql/kyc'
+    info = {
+        'operationName': 'getLegalEntityList',
+        'query': 'query xxxx',
+        'variables': {
+            'params': {
+                'account_id': accountid,
+                'from': 0,
+                'size': 10,
+            }
+        }
+    }
+    config.awx_headers['x-data-center'] = datacenter
+    r = requests.post(url=url, data=json.dumps(info), headers=config.awx_headers).text
+    r = r.replace('false', 'False').replace('null', 'None').replace('true', 'True')
+    r = ast.literal_eval(r)
+    return r['data']['getLegalEntityList']['data'][0]['client_legal_entity_id']
+
