@@ -122,7 +122,7 @@ SELECT ANY_VALUE([fruit, name] HAVING MIN LENGTH(name)) AS a_highest_selling_fru
 
 ---
 
-```ARRAY_AGG```
+```ARRAY_AGG```  
 https://cloud.google.com/bigquery/docs/reference/standard-sql/aggregate_functions#array_agg  
 如果你使用```ARRAY_AGG()```作为聚合函数，可以使用 GROUP BY。 
 如果你使用```ARRAY_AGG()```作为窗口函数（通过```OVER```子句），则不能使用```GROUP BY```，因为窗口函数的逻辑是基于每一行的。 
@@ -148,7 +148,7 @@ FROM vals;
 
 ---
 
-```ARRAY_CONCAT_AGG```
+```ARRAY_CONCAT_AGG```  
 https://cloud.google.com/bigquery/docs/reference/standard-sql/aggregate_functions#array_concat_agg  
 Concatenates elements from expression of type ARRAY, returning a single array as a result.
 ```
@@ -221,7 +221,7 @@ FROM fruits;
  *--------*/
 ```
 
-```STRING_AGG```
+```STRING_AGG```  
 https://cloud.google.com/bigquery/docs/reference/standard-sql/aggregate_functions#string_agg  
 Returns a value (either STRING or BYTES) obtained by concatenating non-NULL values. Returns NULL if there are zero input rows or expression evaluates to NULL for all rows.  
 ```
