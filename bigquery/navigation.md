@@ -138,4 +138,79 @@ FROM finishers;
  *-----------------+-------------+----------+-------------------*/
 ```
 
+```LEAD```  
+Returns the value of the value_expression on a subsequent row.  
+Changing the offset value changes which subsequent row is returned; the default value is 1, indicating the next row in the window frame.  
+https://cloud.google.com/bigquery/docs/reference/standard-sql/navigation_functions#lead  
+```
+WITH finishers AS
+ (SELECT 'Sophia Liu' as name,
+  TIMESTAMP '2016-10-18 2:51:45' as finish_time,
+  'F30-34' as division
+  UNION ALL SELECT 'Lisa Stelzner', TIMESTAMP '2016-10-18 2:54:11', 'F35-39'
+  UNION ALL SELECT 'Nikki Leith', TIMESTAMP '2016-10-18 2:59:01', 'F30-34'
+  UNION ALL SELECT 'Lauren Matthews', TIMESTAMP '2016-10-18 3:01:17', 'F35-39'
+  UNION ALL SELECT 'Desiree Berry', TIMESTAMP '2016-10-18 3:05:42', 'F35-39'
+  UNION ALL SELECT 'Suzy Slane', TIMESTAMP '2016-10-18 3:06:24', 'F35-39'
+  UNION ALL SELECT 'Jen Edwards', TIMESTAMP '2016-10-18 3:06:36', 'F30-34'
+  UNION ALL SELECT 'Meghan Lederer', TIMESTAMP '2016-10-18 3:07:41', 'F30-34'
+  UNION ALL SELECT 'Carly Forte', TIMESTAMP '2016-10-18 3:08:58', 'F25-29'
+  UNION ALL SELECT 'Lauren Reasoner', TIMESTAMP '2016-10-18 3:10:14', 'F30-34')
+SELECT name,
+  finish_time,
+  division,
+  LEAD(name)
+    OVER (PARTITION BY division ORDER BY finish_time ASC) AS followed_by
+FROM finishers;
+
+/*-----------------+-------------+----------+-----------------*
+ | name            | finish_time | division | followed_by     |
+ +-----------------+-------------+----------+-----------------+
+ | Carly Forte     | 03:08:58    | F25-29   | NULL            |
+ | Sophia Liu      | 02:51:45    | F30-34   | Nikki Leith     |
+ | Nikki Leith     | 02:59:01    | F30-34   | Jen Edwards     |
+ | Jen Edwards     | 03:06:36    | F30-34   | Meghan Lederer  |
+ | Meghan Lederer  | 03:07:41    | F30-34   | Lauren Reasoner |
+ | Lauren Reasoner | 03:10:14    | F30-34   | NULL            |
+ | Lisa Stelzner   | 02:54:11    | F35-39   | Lauren Matthews |
+ | Lauren Matthews | 03:01:17    | F35-39   | Desiree Berry   |
+ | Desiree Berry   | 03:05:42    | F35-39   | Suzy Slane      |
+ | Suzy Slane      | 03:06:24    | F35-39   | NULL            |
+ *-----------------+-------------+----------+-----------------*/
+```
+
+```PERCENTILE_CONT``` Computes the specified percentile value for the value_expression, with linear interpolation.  
+```PERCENTILE_DISC``` Computes the specified percentile value for a discrete value_expression. The returned value is the first sorted value of value_expression with cumulative distribution greater than or equal to the given percentile value.  
+```
+SELECT
+  PERCENTILE_CONT(x, 0 RESPECT NULLS) OVER() AS min,
+  PERCENTILE_CONT(x, 0.01 RESPECT NULLS) OVER() AS percentile1,
+  PERCENTILE_CONT(x, 0.5 RESPECT NULLS) OVER() AS median,
+  PERCENTILE_CONT(x, 0.9 RESPECT NULLS) OVER() AS percentile90,
+  PERCENTILE_CONT(x, 1 RESPECT NULLS) OVER() AS max
+FROM UNNEST([0, 3, NULL, 1, 2]) AS x LIMIT 1;
+
+/*------+-------------+--------+--------------+-----*
+ | min  | percentile1 | median | percentile90 | max |
+ +------+-------------+--------+--------------+-----+
+ | NULL | 0           | 1      | 2.6          | 3   |
+ *------+-------------+--------+--------------+-----*/
+```
+```
+SELECT
+  x,
+  PERCENTILE_DISC(x, 0 RESPECT NULLS) OVER() AS min,
+  PERCENTILE_DISC(x, 0.5 RESPECT NULLS) OVER() AS median,
+  PERCENTILE_DISC(x, 1 RESPECT NULLS) OVER() AS max
+FROM UNNEST(['c', NULL, 'b', 'a']) AS x;
+
+/*------+------+--------+-----*
+ | x    | min  | median | max |
+ +------+------+--------+-----+
+ | c    | NULL | a      | c   |
+ | NULL | NULL | a      | c   |
+ | b    | NULL | a      | c   |
+ | a    | NULL | a      | c   |
+ *------+------+--------+-----*/
+```
 
