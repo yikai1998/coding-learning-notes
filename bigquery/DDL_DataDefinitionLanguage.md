@@ -35,6 +35,15 @@ REFERENCES primary_key_table(column_name[, ...]) NOT ENFORCED
 ```
 
 ```
+-- Start of the script
+CREATE TEMP TABLE tmp_table AS (
+  SELECT 'HELLO WORLD' AS welcome
+);
+
+SELECT * FROM tmp_table; -- Query from the temporary table
+```
+
+```
 CREATE TEMP TABLE tmp_table (column_number INT64, column_string STRING);  
 
 INSERT INTO tmp_table(column_number, column_string) 
