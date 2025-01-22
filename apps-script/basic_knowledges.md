@@ -43,13 +43,41 @@ obj.key = 'new value'; // 合法操作，因为我们修改的是对象的属性
 // obj = {}; // 这行代码会导致 TypeError，因为我们试图重新分配一个新对象 
 ``` 
 
-### 其他声明变量的方法 
+**其他声明变量的方法**  
 除了 `var`、`let` 和 `const`，ES2015（ES6）之后没有新的内置变量声明方式。旧版本 JavaScript 使用 `var` 声明，而现代 JavaScript 开发基本只需使用 `let` 和 `const` 因为它们支持块级作用域和更明显的变量意图声明。  
-
----
-
+#### 总结
 - **var**: 更宽松，可以重复声明和赋值，但缺乏块级作用域，容易导致意外行为。 
 - **let**: 提供块级作用域，无法重复声明，但可重复赋值，是一个灵活且常用的变量声明方式。 
 - **const**: 提供块级作用域，不可重复声明或赋值（引用本身不可变，但对象属性和数组项可变），适用于声明不可变的变量。  
 
 因此，`let` 和 `const` 的介绍更多集中在规范性和作用域控制上，而 `var` 是较为宽松的旧式方式，现代 JavaScript 编程更倾向于使用 `let` 和 `const` 来提高代码的可读性和可维护性。 
+
+---
+
+### `map` v.s. `forEach`  
+Use `map` when you need to transform each element of an array and create a new array **with** the transformed values.  
+```gs
+function mapExample() { 
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet(); 
+  var range = sheet.getRange("A1:A" + sheet.getLastRow()); 
+  var values = range.getValues(); // This returns a 2D array 
+  var doubledValues = values.map(function(row) { 
+    return [row[0] * 2]; // Multiply the first (and only) element of each sub-array by 2 
+  }); 
+
+  // Assume we want to write the doubled values to the second column 
+  sheet.getRange(1, 2, doubledValues.length, 1).setValues(doubledValues); 
+} 
+``` 
+
+Use `forEach` when you need to perform operations on each element of an array **without** creating a new array.  
+```gs
+function forEachExample() { 
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet(); 
+  var range = sheet.getRange("A1:A" + sheet.getLastRow()); 
+  var values = range.getValues(); // This returns a 2D array 
+  values.forEach(function(row) { 
+    Logger.log(row[0]); // Log the first (and only) element of each sub-array 
+  }); 
+} 
+``` 
