@@ -20,4 +20,34 @@ sample <br>
 
 ![image](https://github.com/user-attachments/assets/794464fc-cc1a-4c0f-8892-ed11e18c7420)
 
+---
 
+```SELECT * REPLACE```  
+Note: SELECT * REPLACE doesn't replace columns that don't have names.  
+```
+WITH orders AS
+  (SELECT 5 as order_id,
+  "sprocket" as item_name,
+  200 as quantity)
+SELECT * REPLACE ("widget" AS item_name)
+FROM orders;
+
+/*----------+-----------+----------*
+ | order_id | item_name | quantity |
+ +----------+-----------+----------+
+ | 5        | widget    | 200      |
+ *----------+-----------+----------*/
+
+WITH orders AS
+  (SELECT 5 as order_id,
+  "sprocket" as item_name,
+  200 as quantity)
+SELECT * REPLACE (quantity/2 AS quantity)
+FROM orders;
+
+/*----------+-----------+----------*
+ | order_id | item_name | quantity |
+ +----------+-----------+----------+
+ | 5        | sprocket  | 100      |
+ *----------+-----------+----------*/
+```
