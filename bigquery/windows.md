@@ -142,3 +142,9 @@ The ```RANGE``` clause syntax adapts based on the type of the ordering column:
 
 https://cloud.google.com/bigquery/docs/reference/standard-sql/query-syntax#qualify_clause  
 <img width="606" alt="image" src="https://github.com/user-attachments/assets/40a99137-467b-4e13-a94e-0ed977a82df3" />
+
+---
+
+BigQuery 窗口函数的默认行为 如果你只写 SUM(x) OVER (ORDER BY x ASC)，BigQuery 默认使用 RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW。  
+RANGE 模式的特点是：如果 ORDER BY 的值 x 在多行相同（比如 2, 2），它会把所有相同的 x 当作一组，一起进行 SUM 计算。  
+<img width="925" alt="image" src="https://github.com/user-attachments/assets/4e2a28fd-714a-4933-bc24-981481a6c99d" />
