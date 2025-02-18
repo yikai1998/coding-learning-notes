@@ -21,3 +21,8 @@ target="hello" 表示在name="hello"的iframe里打开跳转链接
 ...
 <a href="#p1">跳转到id为p1的元素</a>
 ```
+
+a标签里啥都能放，除了放a  
+```html
+<a href="https://www.baidu.com" target="_blank"><button>click me</button></a>
+```
