@@ -28,3 +28,18 @@ html中标签不区分大小写，但是建议都用小写
 ```html
 <input type="radio" checked>
 ```
+
+---
+
+## CSS的语法  
+style标签里是css语言，不是html
+```css
+/*这行是css注释*/
+p {
+    color: orange;
+    font-size: 40px;
+}
+```
+基本语法就是两部分组成，选择器+声明块  
+选择器：用来指定要设置样式的元素  
+声明块：用来设置样式 
