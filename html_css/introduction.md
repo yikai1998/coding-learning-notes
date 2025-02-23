@@ -8,7 +8,7 @@ c/s架构：customer客户端 service服务端
 
 ---
 
-根据w3c(万维网中的一切标准)的规范，一个网页会被分成三个部份：  
+根据w3c(万维网中的一切标准)的规范，一个网页会被分成三个部份（结构+表现+行为）：  
 1. html负责网页的结构，类似骨架，哪儿是标题，哪儿是图片，...
 2. css负责网页的表现，比如网页的颜色，布局，好不好看
 3. javascript负责网页和用户的交互行为
@@ -66,3 +66,56 @@ html中，元素被分为 块元素 和 行内元素
 块元素 block，对网页进行布局，将页面分成一块一块的，常用 div  
 行内元素 inline，只占自身大小，从左往右排列，一般就是放文字，常用 span  
 块里啥都能放，行内里尽量别放块
+
+---
+
+css  
+通过css可以为网页中的元素设置各种样式，让页面变得更加漂亮  
+
+- 内联样式：可以直接将css编写到元素的style属性中  
+```html
+<p style="color: red; font-size: 40px;">这是一个红色的文本。</p>
+<!--将样式直接编写到style属性当中，会使得代码变得不容易维护，不推荐使用此方法-->
+```
+一个设计优良的网页，最好把结构(HTML)、表现(CSS)、行为(JS)三者分离  
+
+- 内部样式：直接通过style标签来创建一个内部样式表，但只能在当前页面中生效  
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>测试标签</title>
+    <style>
+        p{
+        color: red; 
+        font-size: 40px;
+        }
+    </style>
+</head>
+<body>
+<p>锄禾日啖顾问</p>
+</body>
+</html>
+```
+
+- 外部样式表：将样式编写到外部的css文件中，然后通过link标签引入外部的样式。不同页面之间可以复用，且可利用浏览器的缓存机制加快访问
+```css
+p {
+    color: green;
+    font-size: 40px;
+    }
+```
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>测试标签</title>
+    <link rel="stylesheet" href="workpaper.css">
+</head>
+<body>
+<p>锄禾日啖顾问</p>
+</body>
+</html>
+```
