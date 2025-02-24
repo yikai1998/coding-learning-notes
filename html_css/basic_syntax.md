@@ -1,6 +1,7 @@
 ## HTML的语法  
 
-- 写注释 [快捷键 control+“/”]
+- 写单行注释 [快捷键 control+“/”]
+- 多行注释 [快捷键 control+shift+“/”]
 ```html
 <!--
     这行是注释
