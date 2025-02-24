@@ -80,3 +80,20 @@ class和id类似，每一个元素都可以指定，用来为元素进行分类�
 ```
 - 法3 title^="cba" 表示以abc开头的title
 - 法4 title$="cba" 表示以abc结尾的title
+- 法5 title*="cba" 表示包含abc的title
+- 法6+ 多个选择器一起写，则为同时满足
+```html
+div[title=hello] {
+  color: purple
+}
+p.class_name {
+  ...
+}
+
+A  B
+Selects all B inside of A
+
+`p, .fun` selects all p elements as well as all elements with class="fun"
+
+`p *` selects any element inside all p elements.
+```
