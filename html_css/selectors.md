@@ -39,3 +39,44 @@ class和id类似，每一个元素都可以指定，用来为元素进行分类�
   color: red;
 }
 ```
+
+---
+
+### 属性选择器  
+根据元素的属性来选中元素  
+- 法1 只要有title属性，全都纳入 (title里写的东西，会使鼠标停在页面对应内容上时出现对应内容  )
+```html
+<head>
+    <meta charset="UTF-8">
+    <title>测试标签</title>
+    <style>
+        [title] {
+            color: pink;
+        }
+    </style>
+</head>
+<body>
+<p id="firstp1" class="sb" title="abc">锄禾日啖顾问</p>
+<p id="secondp2" class="sb ib">楚河当日的那个</p>
+<p id="third3" class="sb ib" title="cba">汗滴禾下土认识</p>
+</body>
+```
+- 法2 选中特定title的内容
+```html
+<head>
+    <meta charset="UTF-8">
+    <title>测试标签</title>
+    <style>
+        [title="cba"] {
+            color: pink;
+        }
+    </style>
+</head>
+<body>
+<p id="firstp1" class="sb" title="abc">锄禾日啖顾问</p>
+<p id="secondp2" class="sb ib">楚河当日的那个</p>
+<p id="third3" class="sb ib" title="cba">汗滴禾下土认识</p>
+</body>
+```
+- 法3 title^="cba" 表示以abc开头的title
+- 法4 title$="cba" 表示以abc结尾的title
