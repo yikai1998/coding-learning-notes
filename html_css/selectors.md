@@ -146,3 +146,23 @@ div {
   color: red;
 }
 ```
+
+---
+
+### 伪类选择器 pseudo  
+伪类是一个特殊的类，用来表示元素的特殊状态  
+- 比如超链接，一个链接有没有被访问过，就是一种特殊状态；在css中，可以使用
+- \<a> `:visited`表示访问过的超链接，`:link`未访问过的超链接，
+- visited只能改变文字颜色
+- `:hover`表示当鼠标移入
+- `:active`表示当鼠标点击时
+```
+<style>
+  p:hover {
+    color: yellow;
+  }
+  a:visited {
+    color: red;
+  }
+</style>
+```
