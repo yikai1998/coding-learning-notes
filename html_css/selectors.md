@@ -156,6 +156,7 @@ div {
 - visited只能改变文字颜色
 - `:hover`表示当鼠标移入
 - `:active`表示当鼠标点击时
+- 
 ```
 <style>
   p:hover {
