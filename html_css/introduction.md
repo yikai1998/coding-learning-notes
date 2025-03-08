@@ -52,6 +52,8 @@ html的子标签(子元素)，表示网页的头部，可以用来设置网页�
 小技巧：
 - 输入“感叹号”+Tab键，会自动帮你补全生成一个基本结构  
 - 输入`div.box1`+Tab键，会帮你自动补全成class=box1的div标签
+- `.box1>.box2`+Tab键，就是子元素class为box2，同理
+- `.box$*2`+Tab键，生成两个box class的标签，box1和box2
 ---
 
 元素之间的关系：  
