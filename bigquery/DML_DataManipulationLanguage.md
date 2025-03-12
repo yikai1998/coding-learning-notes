@@ -110,3 +110,7 @@ USING dataset.NewArrivals S ON T.product = S.product
 WHEN MATCHED THEN UPDATE SET quantity = T.quantity + S.quantity 
 WHEN NOT MATCHED THEN INSERT (product, quantity) VALUES(product, quantity) 
 ```
+
+---
+
+<img width="733" alt="image" src="https://github.com/user-attachments/assets/eace2589-8f9b-48f4-aaf3-5617723d24b7" />
