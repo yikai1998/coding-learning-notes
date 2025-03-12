@@ -90,4 +90,7 @@ FROM (
 SELECT ConvertToIntArray(['1', '2', '3']) AS result;
 ```
 
- 
+---
+
+<img width="715" alt="image" src="https://github.com/user-attachments/assets/9551cd2a-b249-43c6-acdb-1dd0de8ac19b" />
+
