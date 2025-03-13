@@ -171,3 +171,20 @@ div {
   }
 </style>
 ```
+
+伪元素表示特殊的位置，用`::`开头  
+- `::before`表示元素的开始位置，开始标签之后
+- `::after`表示元素的结束位置，结束标签之前
+- content里的内容是通过css添加的，不算是网页中的正是内容，所以爬虫抓不到数据
+- 可以统一批量的给标签文字前加内容，比如符号
+```
+<style>
+  div::before {
+    content: "插入内容xxxx";
+    color: red;
+  }
+</style>
+```
+- `::selection`
+- `::first-line`
+- `::first-letter`
