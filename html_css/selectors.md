@@ -188,3 +188,42 @@ div {
 - `::selection`
 - `::first-line`
 - `::first-letter`
+
+---
+
+### 样式的继承
+```
+<head>
+    ...
+    <style>
+        div {
+        color: green;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        我是div
+        <p>我是div中的p元素</p>
+    </div>
+</body>
+```
+设置给祖先元素的样式（背景、边框、布局相关的样式除外），同时也会反映到其后代元素上  
+
+---
+
+### 优先级  
+内联样式 > id选择器 > 类和伪类 > 元素选择器 > 通配  
+注意：  
+```
+div.box1 [0, 0, 1, 1]
+.box1 [0, 0, 1, 0]
+所以现在变成 div.box1优先级更高了
+```
+如果优先级一样，则靠下的更优先  
+如果为样式添加 !important，则该样式获得最高优先级  
+```
+* {
+  color: grey !important
+}
+```
