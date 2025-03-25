@@ -86,7 +86,7 @@ key_mapping = {
 }
 df_combine = []
 for item in df_raw:
-    new_item = {key_mapping.get(k, k): v for k, v in item.items()}
+    new_item = {key_mapping.get(k, k): v for k, v in item.items()}  # 先看能不能找到k对应的newK，找不到就还是用k
     new_item.update(operator_info)
     df_combine.append(new_item)
 
@@ -113,3 +113,10 @@ for field, value in fields_to_update.items():
 # 用@方法来筛选数据
 account_ids = ['9557ba1e-1128-40a8-b860-a9bae093eea8', 'ef34c6eb-3f33-4ed1-8a65-1b0b2aefb59f']
 df = df.query("account_id.isin(@account_ids) and category in ('Risk concern')")
+
+# Function to flatten list values in DataFrame cells
+def flatten_cells(cell):
+    if isinstance(cell, list):
+        return ', '.join(map(str, cell))  # Convert the list to a comma-separated string
+    return cell
+final_df = final_df.apply(lambda column: column.map(flatten_cells))
