@@ -208,7 +208,26 @@ div {
     </div>
 </body>
 ```
+```
+“布局类属性”不会继承，所以 margin、height 等对子元素没影响；
+你看到颜色和字体大小一样，是因为 color 和 font-size 是可以继承的；
+所以 p 元素默认继承了父元素的这些“文本样式属性”。
+
+你修改了父元素 div 的 margin，似乎 p 元素跟着“动”了，导致你误以为 p 的 margin 也改变了。但其实这和「继承」无关，而是和「margin 的流动特性、文档流」有关。
+为什么子元素的位置“跟着”父元素变了？不是因为子元素继承了 margin，而是因为：
+当你给父元素设置了 margin，整个父元素就会和周围元素（比如 <body> 边缘）产生一个“空间”。这个空间会影响整个 div 的位置，自然也就改变了 div 内部的子内容在页面中的位置。
+你看到的是整个 div 向下移动了，比如设置 margin-top: 50px，div 离顶部远了，那么其中的 p 元素“跟着一起”也被推下来了。这并不是 p 的 margin 改变，而是它的父元素 div 改变了位置，p 作为 div 的一部分自然也在不同位置显示。
+div {
+  color: green;
+  font-size: 20px;
+  margin: 90px;
+}
+p {
+  margin: 20px;
+}
+```
 设置给祖先元素的样式（背景、边框、布局相关的样式除外），同时也会反映到其后代元素上  
+<img width="665" alt="image" src="https://github.com/user-attachments/assets/3372a2f3-9cc9-40ae-8697-269bce3544e3" />
 
 ---
 
