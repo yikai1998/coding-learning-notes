@@ -99,5 +99,5 @@ code 代码格式
 
 \<span>：行内容器，用于分组HTML元素。
 ```html
-<p>这是一个< span style="color:red;">红色</span>的文本。</p>
+<p>这是一个<span style="color:red;">红色</span>的文本。</p>
 ```
