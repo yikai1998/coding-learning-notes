@@ -9,3 +9,7 @@
   1em = 1 font-size（当前元素）
 - rem (root em)  
   1rem =  1 html的font-size（根元素）
+- 颜色单位  
+  rgb red green blue  
+  0 ~ 255 `background-color: rgb(255, 0, 0);`  
+  简单的可以直接用颜色名，如 red blue yellow ...  
