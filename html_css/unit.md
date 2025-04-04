@@ -13,3 +13,8 @@
   rgb red green blue  
   0 ~ 255 `background-color: rgb(255, 0, 0);`  
   简单的可以直接用颜色名，如 red blue yellow ...  
+  rgba red green blue alpha(不透明度，需要一个0-1之间的值，1指完全不透明)  
+  `rgba(104, 151, 187, .5)`
+  hsl h色相 是一个环 不同的点代表不同的颜色 取0-360；s饱和度 0%-100% 颜色纯度；l亮度 0%-100%
+  用十六进制表示颜色 红绿蓝 每个颜色的取值范围是00-ff
+  如 绿色`#00ff00`  
