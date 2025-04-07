@@ -1,6 +1,6 @@
 【杂七杂八】
 加速下载package
-pip install -i https://pypi.tuna.tsinghua.edu.cn/simple/pygal
+pip install -i https://pypi.tuna.tsinghua.edu.cn/simple pygal
 
 
 【常用运算符】
