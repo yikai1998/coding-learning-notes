@@ -160,6 +160,7 @@ div {
 - `li:first-child`表示 为第一个子元素的li标签（无所谓父元素是谁，但div必须是第一个儿子）等同于`li:nth-child(1)`
 - `li:first-of-type`表示 为第一个li标签（无所谓被包在哪个类型里，反正是第一个li）等同于`:nth-of-type(n)`
 - `li:nth-last-child(n)` `li:nth-last-of-type(n)` 相似原理
+- `:only-child`满足只有一个子元素的
 - `p:not(.p1)` 表示针对除了class为p1的p标签； 同理 `p:not(:nth-child(3))`
 ```
 <style>
