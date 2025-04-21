@@ -6,4 +6,6 @@
   - 内容区 content  
     在元素的最内部，用来容纳子元素
   - 边框 border
-    盒子的边界，border-width, border-color, border-style
+    盒子的边界，border-width, border-color, border-style  
+    border可以简写，同时设置三个样式 `border: solid red 10px`  
+    
