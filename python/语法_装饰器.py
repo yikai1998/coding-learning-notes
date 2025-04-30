@@ -106,6 +106,17 @@ def search_datacenter(accountid=None, legalentityid=None):
     r = ast.literal_eval(r)
     return r['data']['getLegalEntityList']['total']
 
+"""
+def search_datacenter(accountid):
+    awx_headers['x-data-center'] = 'HK'  # reset to be default
+    url = f'https://airboard-ng.airwallex.com/api/v1/clientList/clientList?businessName%3D{accountid}%26pageSize%3D50'
+    r = requests.get(url=url, headers=awx_headers).text
+    r = r.replace('false', 'False').replace('null', 'None').replace('true', 'True')
+    r = ast.literal_eval(r)
+    dc = 'hk' if len(r['data']) > 0 else 'sg'
+    return dc
+"""
+
 def datacenter_decorator(func):
     def wrapper(*args, **kwargs):
         accountid = kwargs.get('accountid')
