@@ -21,6 +21,7 @@
     margin-top: 100px;
     margin-bottom: 100px;
     padding-top: 100px;
+    margin: auto; /*水平垂直居中*/
     ...
     ```
     
