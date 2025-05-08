@@ -18,5 +18,9 @@
     padding: 20px;
     background-color: #bfa;
     border: 10px red solid;
+    margin-top: 100px;
+    margin-bottom: 100px;
+    padding-top: 100px;
+    ...
     ```
     
