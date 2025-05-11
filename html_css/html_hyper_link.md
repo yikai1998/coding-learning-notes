@@ -27,3 +27,8 @@ a标签里啥都能放，除了放a
 ```html
 <a href="https://www.baidu.com" target="_blank"><button>click me</button></a>
 ```
+
+使用href里的mailto属性  
+```
+<a href="mailto:c1998828@icloud.com">write mails</a>
+```
