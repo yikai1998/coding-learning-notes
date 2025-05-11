@@ -7,6 +7,7 @@ target="hello" 表示在name="hello"的iframe里打开跳转链接
 ```
 ```html
 <a href="模拟数据.xlsx">这是一个内部文件路径，点击以后会下载</a>
+<!--"../"表示上一级目录菜单 -->
 ```
 ```html
 <a href="#">回到页面顶部</a>
