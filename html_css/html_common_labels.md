@@ -76,7 +76,9 @@ code 代码格式
 
 ---
 # ai整理的回答  
-\<table>：表格标签，用于创建表格。
+\<table>：表格标签，用于创建表格。  
+一行行写的，先table，再tr，再th/td  
+表格table标签里可以没有表头单元格th，但是不能没有单元格数据标签td  
 ```html
 <table border="1">
   <tr>
@@ -87,6 +89,26 @@ code 代码格式
     <td>单元格1</td>
     <td>单元格2</td>
   </tr>
+</table>
+```
+```html
+<table cellspacing="50px" cellpadding="2px" border="10px" bordercolor="blue" align="center">
+    <caption>暑假作业</caption>
+    <tr>
+        <th>唐诗三百首</th>
+        <th>宋词一百篇</th>
+    </tr>
+    <tr>
+        <td>飞流直下三千尺，疑是银河落九天。</td>
+        <td>蓦然回首，那人却在，灯火阑珊处。</td>
+    </tr>
+    <tr>
+        <td>垂死病中惊坐起，暗风吹雨入寒窗。</td>
+        <td>王师北定中原日，家祭勿忘告乃翁。</td>
+    </tr>
+    <tr>
+        <td align="center" colspan="2">编辑中</td>
+    </tr>
 </table>
 ```
 
