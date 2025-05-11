@@ -2,7 +2,11 @@ title表示标题标签，文字会显示到标签页。而且搜索引擎在搜
 
 h1 h2 h3 h4 h5 h6 标题标签。通常一个页面只有一个h1，搜索引擎也会识别h1，在seo中h1的重要性仅次于title。  
 
+blockquote缩进，是一整段的缩进
+
 p 段落标签。  
+
+b粗体，i斜体，u下划线，del/s/strike删除线
 
 br 换行标签。\<br>  
 
@@ -97,7 +101,7 @@ code 代码格式
 </form>
 ```
 
-\<span>：行内容器，用于分组HTML元素。
+\<span>：行内容器，用于分组HTML元素。这个标签本身是没有任何意义的，只有结合css才可以看出效果  
 ```html
 <p>这是一个<span style="color:red;">红色</span>的文本。</p>
 ```
