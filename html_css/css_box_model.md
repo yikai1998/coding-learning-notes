@@ -22,6 +22,8 @@
     margin-bottom: 100px;
     padding-top: 100px;
     margin: auto; /*水平垂直居中*/
-    ...
+    当子元素的大小超过了父元素的内容区时，子元素会overflow，如何处理呢？用overflow样式
+      可选值：默认visible，hidden隐藏，scroll生成水平和垂直的滚动条，auto根据需要自动判定生成滚动条
+    
     ```
     
