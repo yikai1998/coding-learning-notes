@@ -26,4 +26,41 @@
       可选值：默认visible，hidden隐藏，scroll生成水平和垂直的滚动条，auto根据需要自动判定生成滚动条
     
     ```
+```html
+<!--小练习-->
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document-2025-05-15</title>
+    <style>
+        .w1 {
+            border: 2px black solid;
+            color: red;
+            height: 50px;
+            background-color: pink;
+            width: 400px;
+            margin: auto;
+            /*
+            margin: auto; 对 <p> 元素不起作用的原因是 <p> 元素默认是块级元素（block-level element），但它的宽度是自动的（默认情况下宽度会根据内容自动调整），
+            而 margin: auto; 通常用于水平居中块级元素时，需要元素的宽度是固定的（或者设置了宽度）。
+            解决方法: 为了让 margin: auto; 起作用，你需要给 .w1 设置一个固定的宽度
+            */
+            text-align: center;  /*水平居中用text-align*/
+            line-height: 50px;  /*将行高设置成和元素高度一样*/
+        }
+    </style>
+</head>
+<body>
+
+    <p class="w1">
+        今天去游泳，很开心。
+    </p>
+
+</body>
+</html>
+```
     
