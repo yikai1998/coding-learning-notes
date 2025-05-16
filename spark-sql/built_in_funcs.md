@@ -36,4 +36,38 @@ SELECT flatten(array(array(1, 2), array(3, 4)));  -- [1, 2, 3, 4]
 - sequence(start, stop, step)
 - slice(x, start, length)	 // Subsets array x starting from index start (array indices start at 1, or starting from the end if start is negative) with the specified length.
 - sort_array(array[, ascendingOrder])	 // Null elements will be placed at the beginning of the returned array in ascending order or at the end of the returned array in descending order.
-- 
+
+
+## map related  
+- (try_)element_at(array, index)  // Returns element of array at given (1-based) index.
+- (try_)element_at(map, key)  // Returns value for given key. The function returns NULL if the key is not contained in the map.
+- map(key0, value0, key1, value1, ...)  // Creates a map
+- map_concat(map, ...)
+- map_contains_key(map, key)
+- map_entries(map)	// Returns an unordered array of all entries in the given map.
+```sql
+“entry”在英语里常作为“入口”用词，但在数据结构或数据库语境下，entry 指的是“一个键值对项”（key-value pair）。
+map_entries(map) 就是把“字典”里的每一组（key,value）“拆包”成数组，或者说“变成一张两列的表”。
+在SQL（如 Presto、Trino、SparkSQL、ClickHouse 等）里的 map 结构，本质就是一个“键→值”的两列关系，即“key→value”
+每个key只能对应一个value
+... 你每个map entry依然只有两列（key和value），但value本身可以是Record、对象或结构体，可以有多个字段。
+SELECT map_entries(map(1, 'a', 2, 'b'));  -- [{1, a}, {2, b}]
+```
+- map_from_arrays()
+```sql
+SELECT map_from_arrays(array(1.0, 3.0), array('2', '4'));
+-- {1.0 -> 2, 3.0 -> 4}
+```
+- map_from_entries
+```sql
+SELECT map_from_entries(array(struct(1, 'a'), struct(2, 'b')));  -- {1 -> a, 2 -> b}
+看到 map: 就是字典{key→value}
+看到 entries: 就是一堆(key,value)一组的东西
+看到 map_from_entries: 就是把这些组装成字典
+看到 map_entries: 就是把字典拆成一堆(key,value)的行
+```
+- map_keys, map_values  // Returns an unordered array containing the keys/values of the map
+- str_to_map(text[, pairDelim[, keyValueDelim]])
+```sql
+SELECT str_to_map('a:1,b:2,c:3', ',', ':');
+```
