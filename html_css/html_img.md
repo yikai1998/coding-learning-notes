@@ -32,3 +32,17 @@ base64 是一种编码格式，可以把图片转换成字符，然后直接进�
     Your browser does not support the video tag. Please use a modern browser to view this video.
 </video>
 ```
+
+- 引入音乐
+<audio src="https://www.youtube.com/s/search/audio/success.mp3"controls loop></audio>
+
+- 引入flash
+以前可用<embed src="yourfile.swf">或<object>等标签插入Flash内容。  
+但主流浏览器（Chrome、Edge、Firefox等）已经全面禁用Flash插件（自2021年起Adobe和各大浏览器全面停止支持）。  
+你现在即使用<embed>插入swf，页面上也无法正常显示和播放，除非用特殊环境（专门的老旧浏览器、本地Flash Player模拟器等）。  
+Flash为什么被淘汰？  
+安全风险大（容易被病毒、木马利用）  
+不利于移动端兼容  
+HTML5、CSS3、JavaScript等新技术发展后，前端有了更强更安全的交互动画能力，Flash失去意义  
+大公司全面弃用，连Adobe自己都不再更新  
+建议全部用HTML5、css、js等现代技术替代。  
