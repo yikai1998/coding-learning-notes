@@ -2,6 +2,8 @@
 
 # 主要是一些基本常见的函数整理  
 
+--- 
+
 ## array related
 - array_append(array, element)  // Add the element at the end of the array. Type of element should be similar to type of the elements of the array.
 - array_prepend
@@ -40,6 +42,7 @@ SELECT flatten(array(array(1, 2), array(3, 4)));  -- [1, 2, 3, 4]
 - slice(x, start, length)	 // Subsets array x starting from index start (array indices start at 1, or starting from the end if start is negative) with the specified length.
 - sort_array(array[, ascendingOrder])	 // Null elements will be placed at the beginning of the returned array in ascending order or at the end of the returned array in descending order.
 
+---
 
 ## map related  
 - (try_)element_at(array, index)  // Returns element of array at given (1-based) index.
@@ -75,6 +78,7 @@ SELECT map_from_entries(array(struct(1, 'a'), struct(2, 'b')));  -- {1 -> a, 2 -
 SELECT str_to_map('a:1,b:2,c:3', ',', ':');
 ```
 
+---
 
 ## date timestamp related
 - add_months  // 加的是month，可以减
@@ -131,3 +135,29 @@ GROUP BY window(event_time, '5 minutes')
 # 如果你要每5分钟统计一次总金额，window会自动帮你把这些 row 按照 12:00-12:05, 12:05-12:10, 12:10-12:15... 分组。
 ```
 
+---
+
+## json related  
+- from_json(jsonStr, schema[, options])	 // `SELECT from_json('{"a":1, "b":0.8}', 'a INT, b DOUBLE')['a'];`
+- get_json_object(json_txt, path)	 // Extracts a json object from `path`.
+```sql
+-- $ 就是整个 JSON 的根，$. 表示“从顶层往下”，用于写JSON路径
+SELECT get_json_object('{"a":"b"}', '$.a');  -- b
+SELECT get_json_object('{"user":{"name":"张三", "age":18}, "status":"ok"}', '$.user.name');  -- 张三
+SELECT get_json_object('{"tags":["a","b","c"], "count": 3}', '$.tags[1]');  -- b
+```
+- json_array_length(jsonArray) 
+- json_object_keys(json_object)
+- json_tuple  // 能一次性从 JSON 字符串里“批量取出多个字段”，每个字段单独成一列。它只支持扁平、不嵌套的key
+```sql
+SELECT json_tuple('{"order_id": 1234, "item": {"name": "Beer", "price": 10}, "customer": "张三"}', 'order_id', 'item')
+-- json_tuple：只能用字段名，不加$，不允许路径，只会找最外面的key
+-- get_json_object / json_extract：必须以$开头，完整写路径
+```
+- schema_of_json
+- to_json()  // Returns a JSON string with a given struct value
+```sql
+SELECT to_json(array(named_struct('a', 1, 'b', 2)));  -- [{"a":1,"b":2}]
+SELECT to_json(map('a', named_struct('b', 1)));  -- {"a":{"b":1}}
+SELECT to_json(array(map('a', 1)));  -- [{"a":1}]
+```
