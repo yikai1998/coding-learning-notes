@@ -71,3 +71,60 @@ SELECT map_from_entries(array(struct(1, 'a'), struct(2, 'b')));  -- {1 -> a, 2 -
 ```sql
 SELECT str_to_map('a:1,b:2,c:3', ',', ':');
 ```
+
+
+## date timestamp related
+- add_months  // 加的是month，可以减
+- date_add  // 加的是day，可以减 或者有date_sub
+- convert_timezone  // 从一个地区时间转换到另一个地区时间
+```sql
+SELECT convert_timezone('UTC', 'Asia/Shanghai', timestamp_ntz'2021-12-06 00:00:00');  -- 2021-12-06T08:00:00.000
+SELECT convert_timezone('UTC', 'UTC+8', timestamp_ntz'2021-12-06 00:00:00');  -- 2021-12-06T08:00:00.000
+SELECT convert_timezone('UTC+8', timestamp_ntz'2021-12-06 00:00:00'); -- 2021-12-06T08:00:00.000 默认第一个param是utc
+select convert_timezone('UTC', 'Asia/Shanghai', now())  -- current local time as now() would return current utc response
+类似 from_utc_timestamp(timestamp, timezone)
+```
+- current_date()
+- current_timestamp()
+- date_diff(end, start)
+- date_format  // 把timestamp转换成string
+```sql
+SELECT date_format('2016-04-08', 'y');  -- 2016
+SELECT date_format(current_date(), 'yyyy-MM-dd');  -- 2025-05-20
+SELECT date_format(now(), 'yyyy-MM-dd HH:mm:ss');  -- 2025-05-20 02:58:14
+```
+- date_from_unix_date  // Create date from the number of days since 1970-01-01.
+- date_part(field, source)  // Extracts a part of the date/timestamp or interval source.
+```sql
+select date_part('year', now());  -- 2025
+select date_part('month', now()); -- 5
+select date_part('day', now()); -- 20
+select date_part('week', now());  -- 21
+select date_part('doy', timestamp('2025-02-10'));  -- 41 (days of the year) [没有所谓的dom，这种效果你直接看day就行了]
+select date_part('dow', timestamp('2025-05-25'));  -- 1 (day of the week, 1 is Sunday, 2 is Monday)
+select date_part('days', interval 5 days 3 hours 7 minutes 30 seconds 1 milliseconds 1 microseconds);  -- 5
+select date_part('minutes', interval 5 days 3 hours 7 minutes 30 seconds 1 milliseconds 1 microseconds);  -- 7
+```
+- date_trunc(fmt, ts)  // Returns timestamp that is truncated to the unit specified by the format model
+```sql
+select date_trunc('MONTH', now());  -- 2025-05-01T00:00:00.000+00:00
+DAY MONTH QUARTER WEEK YEAR MINUTE SECOND ...
+```
+- make_date()
+```sql
+select make_date(2025, 11, 8)  -- 2025-11-08
+```
+- last_day(date)  // 返回当月的最后一天
+```sql
+SELECT last_day('2009-01-12');  -- 2009-01-31
+```
+- window(time_column, window_duration[, slide_duration[, start_time]])  // 如果你没做实时流式大数据，没做事件流分析/传感器/行为数据监控，确实日常做业务SQL很难用到
+```sql
+SELECT
+  window(event_time, '5 minutes') as win,
+  sum(amount)
+FROM events
+GROUP BY window(event_time, '5 minutes')
+# 如果你要每5分钟统计一次总金额，window会自动帮你把这些 row 按照 12:00-12:05, 12:05-12:10, 12:10-12:15... 分组。
+```
+
