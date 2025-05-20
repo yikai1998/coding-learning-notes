@@ -45,6 +45,9 @@ ORDER BY sale_date, product_name;
 ```
 ![image](https://github.com/user-attachments/assets/f2c828c1-a79b-4bd4-b8f8-78b50fd7ddea)
 
+<img width="622" alt="image" src="https://github.com/user-attachments/assets/c52e8220-3488-48e5-8a88-7e075d161450" />
+
+
 <br> UNPIVOT operator with multiple columns
 
 ```
