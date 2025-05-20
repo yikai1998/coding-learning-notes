@@ -25,9 +25,12 @@ SELECT array_repeat('123', 2);
 - array_union  // Returns an array of the elements in the union of array1 and array2, without duplicates.
 - arrays_zip  // Returns a merged array of structs in which the N-th struct contains all N-th values of input arrays.
 ```sql
-SELECT arrays_zip(array(1, 2, 3), array(2, 3, 4));  -- [{1, 2}, {2, 3}]
+SELECT arrays_zip(array(1, 2, 3), array(2, 3, 4));  -- [{1, 2}, {2, 3}, {3, 4}]
 SELECT arrays_zip(array(1, 2), array(2, 3), array(3, 4));  -- [{1, 2, 3}, {2, 3, 4}]
 ```
+<img width="650" alt="image" src="https://github.com/user-attachments/assets/1bb4018a-2fe1-4be0-b769-9f4a4478f2d1" />
+<img width="852" alt="image" src="https://github.com/user-attachments/assets/e47c7d18-c7b9-4209-a60b-0a780eb22e3e" />
+
 - flatten  // Transforms an array of arrays into a single array.
 ```sql
 SELECT flatten(array(array(1, 2), array(3, 4)));  -- [1, 2, 3, 4]
