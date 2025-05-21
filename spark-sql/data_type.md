@@ -49,3 +49,22 @@
 - VARIANT  
   Represents semi-structured data.
   
+
+```txt
+1. array
+就是“数组”，像 [1,2,3]，也可以是 ["a", "b", "c"]
+每项类型一般相同
+SQL类型: ARRAY<STRING>, ARRAY<INT>, ARRAY<STRUCT<...>>...
+2. struct
+就是“结构体/对象/一行数据”，像{"a":1,"b":"x"} 或 Python 里的 dict 或“数据库表里的单行”
+包含一组有名字的字段
+SQL类型: STRUCT<a INT, b STRING>
+3. map
+就是“字典”，一堆key-value键值对，比如{"a":10, "b":20}
+和struct区别：map的key一般可以是任意值（字符串、数字，不需要提前写死），struct的key字段是表结构里提前定义好的
+SQL类型: MAP<STRING, INT>
+4. variant（或有的库叫“any”/“json”）
+最包容的类型，啥都能装进来！
+你往里面塞个[1,2]变成array，塞个{a:1}变成struct/map，塞个"abc"是字符串，甚至可以嵌套。
+真实含义就是“我不知道到底是啥，但保证能装下json任何结构的数据类型”。
+```
