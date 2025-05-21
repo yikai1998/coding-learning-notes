@@ -177,7 +177,7 @@ SELECT concat_ws('/', 'foo', null, 'bar');  -- foo/bar
 - endwith startwith
 - initcap  // 空格隔开的每个单词的首字母大写
 - lower lcase upper ucase
-- printf  // `SELECT printf("Hello World %d %s", 100, "days");  -- Hello World 100 days`
+- format_string printf  // `SELECT printf("Hello World %d %s", 100, "days");  -- Hello World 100 days`
 - regexp_count regexp_extract regexp_extract_all regexp_instr regexp_replace
 - repeat  // 重复string
 - replace  // 区分大小写的
@@ -189,3 +189,46 @@ SELECT split('oneAtwoBthreeCfourDfive', '[ABCd]', -1);  -- ["one","two","three",
 SELECT split_part('oneAtwoBthreeCfourDfive', 'o', -1); -- urDfive
 SELECT split_part('oneAtwoBthreeCfourDfive', 'o', 2); -- neAtw
 ```
+
+---
+
+## conditional related
+- coalesce
+
+---
+
+## conversion related
+- cast(expr AS type)
+
+---
+
+## predicate related
+- !expression  // logical not
+- expr1 <=> expr2  // 就是想让“两个都是NULL”也算“相等”，规避掉NULL导致的“比对失效”
+<img width="857" alt="image" src="https://github.com/user-attachments/assets/3a77fd3d-1f78-490d-898a-bcbc47b5e113" />
+- = ==
+- regexp regexp_like rlike  // Returns true if `str` matches `regexp`, or false otherwise.
+```sql
+-- Python： r'abc\n' => "abc\n"（四个字符）
+-- Spark SQL (escapedStringLiterals=false)： 'abc\n' => "abc\n"（四个字符）
+-- Spark SQL (escapedStringLiterals=true)： 'abc\n' => "abc" + 换行
+SELECT regexp('%SystemDrive%\\Users\\John', '%SystemDrive%\\\\Users.*');  -- true
+SELECT regexp('%SystemDrive%\\Users\\John', r'%SystemDrive%\\\\Users.*');  -- false
+select 'hello\\n\nworld';  -- hello\n换行world
+```
+- like
+```sql
+like 'a%_b%'  -- a后跟着至少一任意字符，然后b及后续内容
+like '%#_%' escape '#'  -- "#_"会匹配真实的下划线
+```
+
+---
+
+## window related
+- 
+
+---
+
+## others
+- current_user, user
+- typeof
