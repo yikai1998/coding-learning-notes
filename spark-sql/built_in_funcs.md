@@ -225,7 +225,12 @@ like '%#_%' escape '#'  -- "#_"会匹配真实的下划线
 ---
 
 ## window related
-- 
+- lead 后一行
+- lag 前一行
+- dense_rank  -- 1,1,2,...
+- rank  -- 1,1,3,...
+- nth_value
+- row_number
 
 ---
 
