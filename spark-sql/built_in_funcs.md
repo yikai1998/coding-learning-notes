@@ -271,3 +271,17 @@ LATERAL VIEW OUTER explode(reviews) AS r
 -- 用LATERAL VIEW OUTER 或 explode_outer()可以实现类似LEFT JOIN的效果，即保留主表原有行，即便数组为空。
 -- LATERAL VIEW explode（不带OUTER）行为类似inner join，有空数组就会把那行“炸没”。
 ```
+```sql
+-- variant 好比“超大百宝箱”，到底能不能explode要先搞清楚它是不是“装了数组”！能的话先转array，不能就不能直接爆
+-- 结构体数组要“点名道姓”写struct才能转
+-- 面对很大的variant，不是必须所有字段都写struct; `CAST(arr_column AS ARRAY<STRUCT<字段1:STRING, 字段9:INT>>)`
+
+select 
+a.id::string as account_id,
+-- cast(a.data:kycRecord:kycReviewedRecords as ARRAY<STRUCT<reviewDate:TIMESTAMP, reviewResult:STRING, reviewType:STRING>>)
+r.reviewDate
+
+from `tp-prod-sg`.`silver`.`authorisation__account` as a
+lateral view explode(cast(a.data:kycRecord:kycReviewedRecords as ARRAY<STRUCT<reviewDate:STRING, reviewResult:STRING, reviewType:STRING>>)) as r
+where a.id = '8f7ac892-b2aa-4f0c-afea-8ed67784e550'
+```
