@@ -1,5 +1,9 @@
 参考链接：https://docs.databricks.com/aws/en/sql/language-manual/data-types  
 
+```txt
+: 用来“取json路径字段”，:: 是“强制转类型”，?:: 是“安全转类型”（失败就null）
+```
+
 - ARRAY
   ```sql
   SELECT A.Vaaa[1] FROM VALUES
