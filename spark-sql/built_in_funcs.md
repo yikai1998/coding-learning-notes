@@ -161,3 +161,31 @@ SELECT to_json(array(named_struct('a', 1, 'b', 2)));  -- [{"a":1,"b":2}]
 SELECT to_json(map('a', named_struct('b', 1)));  -- {"a":{"b":1}}
 SELECT to_json(array(map('a', 1)));  -- [{"a":1}]
 ```
+
+---
+
+## string related  
+- trim ltrim rtrim
+- len length char_length character_length
+- concat_ws  // concatenation of the strings separated by `sep`, skipping null values
+```sql
+SELECT concat_ws('/', 'foo', null, 'bar');  -- foo/bar
+```
+- contains(left, right)  // Returns a boolean. The value is True if right is found inside left.
+- instr locate position  // Returns the (1-based) index of the first occurrence of `substr` in `str`.
+- find_in_set(str, str_array)  // Returns the index (1-based) of the given string (`str`) in the comma-delimited list (`str_array`). Returns 0, if the string was not found or if the given string (`str`) contains a comma.
+- endwith startwith
+- initcap  // 空格隔开的每个单词的首字母大写
+- lower lcase upper ucase
+- printf  // `SELECT printf("Hello World %d %s", 100, "days");  -- Hello World 100 days`
+- regexp_count regexp_extract regexp_extract_all regexp_instr regexp_replace
+- repeat  // 重复string
+- replace  // 区分大小写的
+- split split_part(不接受[...])
+```sql
+SELECT split('oneAtwoBthreeCfourDfive', '[ABCd]');  -- ["one","two","three","fourDfive"]
+SELECT split('oneAtwoBthreeCfourDfive', '[ABCd]', 3);  -- ["one","two","threeCfourDfive"]
+SELECT split('oneAtwoBthreeCfourDfive', '[ABCd]', -1);  -- ["one","two","three","fourDfive"]
+SELECT split_part('oneAtwoBthreeCfourDfive', 'o', -1); -- urDfive
+SELECT split_part('oneAtwoBthreeCfourDfive', 'o', 2); -- neAtw
+```
