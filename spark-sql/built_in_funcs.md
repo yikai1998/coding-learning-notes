@@ -237,3 +237,37 @@ like '%#_%' escape '#'  -- "#_"会匹配真实的下划线
 ## others
 - current_user, user
 - typeof
+- explode
+BigQuery/标准SQL: UNNEST 一般写在 FROM 或 JOIN 后面，相当于"炸"列变多行；  
+Spark SQL: 直接 explode 写 SELECT 里，或写成 LATERAL VIEW explode(arr) AS num。
+```sql
+SELECT e.col1, e.col2
+FROM (SELECT explode(array(struct(10, 20), struct(null, 55))) AS e)
+```
+```sql
+with temp as (
+  -- 构造数据
+SELECT 101 AS user_id, array(
+    named_struct('reviewDate', '2024-01-01', 'reviewResult', 'PASS', 'reviewType', 'KYC'),
+    named_struct('reviewDate', '2024-01-05', 'reviewResult', 'FAIL', 'reviewType', 'AML')
+) AS reviews
+UNION ALL
+SELECT 102, array(
+    named_struct('reviewDate', '2024-02-01', 'reviewResult', 'PASS', 'reviewType', 'KYC')
+)
+UNION ALL
+SELECT 103, array()  -- 空数组
+)
+
+SELECT
+  user_id,
+  r.reviewDate,
+  r.reviewResult,
+  r.reviewType
+FROM (
+  temp
+) t
+LATERAL VIEW OUTER explode(reviews) AS r
+-- 用LATERAL VIEW OUTER 或 explode_outer()可以实现类似LEFT JOIN的效果，即保留主表原有行，即便数组为空。
+-- LATERAL VIEW explode（不带OUTER）行为类似inner join，有空数组就会把那行“炸没”。
+```
