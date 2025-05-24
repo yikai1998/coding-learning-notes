@@ -25,3 +25,30 @@ input 输入框
     <input type="checkbox" value="choice2" name="choice2" checked="checked"> choiceB
     <input type="checkbox" value="choice3" name="choice3"> choiceC
 ```
+select option 列表框 单选下拉菜单，附上multiple则变为多选（按住ctr）  
+```html
+        <select name="definition name" id="unified id" multiple>
+            <option value="choiceA result">hamburger</option>
+            <option value="choiceB result">fried chicken</option>
+            <option value="choiceC result" selected="selected">fried chips</option>
+            <option value="choiceD result">coca cola</option>
+        </select>
+```
+textarea 文本区域 超出垂直范围的话会自动显示滚动条 水平方向不会  
+```html
+    <textarea name="unified name" id="unified id" cols="100" rows="3">
+        风急天高猿啸哀                     渚清沙白鸟飞回
+        无边落木萧萧下                     不尽长江滚滚来
+        万里悲秋常作客                     百年多病独登台
+        艰难苦恨繁霜鬓                     潦倒新停浊酒杯
+    </textarea>
+```
+按钮  
+- 提交按钮 把表单里的信息提交到指定的地方 可以是网页 数据库 或其他地方
+```html
+<input type="submit" name="diy name" id="unified id">
+```
+- 清空按钮 清空表单里的用户填写信息
+```html
+type="reset"
+```
