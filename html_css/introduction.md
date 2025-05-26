@@ -102,7 +102,7 @@ css
 </html>
 ```
 
-- 外部样式表：将样式编写到外部的css文件中，然后通过link标签引入外部的样式。不同页面之间可以复用，且可利用浏览器的缓存机制加快访问
+- 外部样式表：将样式编写到外部的css文件中，然后通过link标签引入外部的样式。不同页面之间可以复用，且可利用浏览器的缓存机制加快访问。一个页面可以根据需要插入多个外部样式表。
 ```css
 p {
     color: green;
@@ -115,7 +115,8 @@ p {
 <head>
     <meta charset="UTF-8">
     <title>测试标签</title>
-    <link rel="stylesheet" href="workpaper.css">
+    <link rel="stylesheet" href="workpaper.css" type="text/css">
+    <!-- rel="stylesheet表示浏览器连接的是一个样式表文件；type="text/css"表示传输的文本类型为样式表类型文件 可省略； 都是固定写法" -->
 </head>
 <body>
 <p>锄禾日啖顾问</p>
