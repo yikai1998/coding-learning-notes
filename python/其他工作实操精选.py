@@ -105,3 +105,11 @@ def black_map(predicate, iterable):
     for x in iterable:
         if predicate(x):
             yield x
+
+# bug经验
+"""
+在Python中，空字符串 '' 被认为在任何字符串中，所以
+'' in 'A29AD2EBC5VQHK'   # 等于 True
+这一点逻辑上类似于：找“空子串”总会在任何串的开始、结束等地方。
+"""
+
