@@ -120,3 +120,10 @@ def flatten_cells(cell):
         return ', '.join(map(str, cell))  # Convert the list to a comma-separated string
     return cell
 final_df = final_df.apply(lambda column: column.map(flatten_cells))
+
+# 希望Account Id等动态内容直接显示在validation check进度条（tqdm）的一行描述里，不要每条都print成新行，就像desc='validation check [Account Id xxx]'这种“随进度条实时刷新”
+with tqdm(df_work.values.tolist()) as bar:
+    for row in bar:
+        bar.set_description(f'validation check | Account Id: {row[0]}')  # “刷新和初始化行为”是tqdm进度条第一次输出的正常现象，不是 bug，也不是重复多行。随后进度只在同一行刷新，不会再多新的一行。
+        ecOnboard.validation_check(accountid=row[0])
+        time.sleep(0.2)
