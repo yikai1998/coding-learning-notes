@@ -86,3 +86,22 @@ if __name__ == '__main__':
         r = transfer_store(from_accountid=from_accountid, to_accountid=to_accountid, doc=['/'.join([fkey['key'], 'Airwallex Mail - Re_ Token Transfer Supporting Material.pdf'])], value_list=value_list)
         if r['success']:
             print('token transferred successfully')
+
+# decode token
+import jwt
+def decode_token(self, token):
+    pload = jwt.decode(token, options={'verify_signature': False})
+    return pload
+
+# map btw two list
+def black_map(predicate, iterable):
+    """
+    purpose to check against two list
+    reference:
+        https://docs.python.org/3/library/itertools.html#itertools.dropwhile [itertools 里特有的方法，不是随便命名的]
+        a= itertools.filterfalse(lambda x: x not in black, test)
+        https://blog.csdn.net/mieleizhi0522/article/details/82142856
+    """
+    for x in iterable:
+        if predicate(x):
+            yield x
