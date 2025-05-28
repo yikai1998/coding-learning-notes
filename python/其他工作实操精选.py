@@ -1,3 +1,136 @@
+# 接口调用模版1
+# headers
+HEADER = {
+    'Content-Type': 'application/json',
+    'authorization': 'TOKEN WITHOUT BEARER',
+    'x-data-center': 'HK'  # default
+}
+HEADER2 = {
+    'Content-Type': 'application/json',
+    'authorization': 'TOKEN',
+    'x-data-center': 'HK'  # default
+}
+def search_datacenter(self, accountid=None, legalentityid=None):
+    url = 'https://airboard-ng.airwallex.com/graphql/kyc/getLegalEntityList'
+    HEADER['x-data-center'] = 'HK'  # reset to be default
+    if accountid is None:
+        data = {
+            'operationName': 'getLegalEntityList',
+            'query': 'query getLegalEntityList($params: GetLegalEntityListParam) {\n  getLegalEntityList(params: $params) {\n    data {\n      account_id\n      account_open_id\n      agreed_to_terms_and_conditions\n      business_structure\n      client_legal_entity_id\n      country\n      customer_name_english\n      customer_name_local\n      industry_category\n      kyc_created_time\n      kyc_passed_time\n      kyc_process_status\n      risk_rating\n      __typename\n    }\n    total\n    __typename\n  }\n}\n',
+            'variables': {
+                'params': {
+                    'client_legal_entity_id': legalentityid,
+                    'from': 0,
+                    'size': 10,
+                }
+            }
+        }
+    else:
+        data = {
+            'operationName': 'getLegalEntityList',
+            'query': 'query getLegalEntityList($params: GetLegalEntityListParam) {\n  getLegalEntityList(params: $params) {\n    data {\n      account_id\n      account_open_id\n      agreed_to_terms_and_conditions\n      business_structure\n      client_legal_entity_id\n      country\n      customer_name_english\n      customer_name_local\n      industry_category\n      kyc_created_time\n      kyc_passed_time\n      kyc_process_status\n      risk_rating\n      __typename\n    }\n    total\n    __typename\n  }\n}\n',
+            'variables': {
+                'params': {
+                    'account_id': accountid,
+                    'from': 0,
+                    'size': 10,
+                }
+            }
+        }
+    r = requests.post(url=url, data=json.dumps(data), headers=HEADER).text
+    r = r.replace('false', 'False').replace('null', 'None').replace('true', 'True')
+    r = ast.literal_eval(r)
+    return r['data']['getLegalEntityList']['total']
+dc = 'HK' if func_repo.search_datacenter(accountid=accountid) > 0 else 'SG'
+HEADER['x-data-center'] = dc
+HEADER2['x-data-center'] = dc
+def get_risk_common_info(legal_entity_id):
+    url = 'https://airboard-ng.airwallex.com/graphql/risk-common'
+    data = {
+        'operationName': 'getAccountLinkageInformationV2',
+        'query': 'query getAccountLinkageInformationV2($accStatuses: [String], $accountId: String, $beforeKycReceived: Boolean, $includeAnonymousIP: Boolean, $kycFailedReasons: [String], $kycRecordId: String, $kycStatuses: [String], $legalEntityId: String, $offboardReasons: [String], $orderByHits: Order, $pageNumber: Int, $pageSize: Int, $types: [String], $watchListCategories: [String], $watchListHits: Boolean) {\n  getAccountLinkageInformationV2(\n    accStatuses: $accStatuses\n    accountId: $accountId\n    beforeKycReceived: $beforeKycReceived\n    includeAnonymousIP: $includeAnonymousIP\n    kycFailedReasons: $kycFailedReasons\n    kycRecordId: $kycRecordId\n    kycStatuses: $kycStatuses\n    legalEntityId: $legalEntityId\n    offboardReasons: $offboardReasons\n    orderByHits: $orderByHits\n    pageNumber: $pageNumber\n    pageSize: $pageSize\n    types: $types\n    watchListCategories: $watchListCategories\n    watchListHits: $watchListHits\n  ) {\n    accountGroupId\n    accountLinkageCounts\n    accountLinkageDetails {\n      accountClosureReason\n      accountStatus\n      customerSegment\n      idHitsOfReasons\n      kycFailedReason\n      kycStatus\n      linkageInformation\n      linkageType\n      linkedAccountId\n      linkedCleId\n      linkedName\n      links {\n        detail\n        reason\n        __typename\n      }\n      offboardReason\n      ownerOrgLevelTwo\n      owningEntity\n      platformAccountId\n      spaceId\n      watchlistCategories\n      watchlistHit\n      __typename\n    }\n    kycFailedReasons\n    linkTypes\n    offboardReasons\n    ownedAccountGroups {\n      id\n      name\n      ownerId\n      __typename\n    }\n    resCount\n    statsOfAccount {\n      ACTIVE\n      CLOSED\n      DORMANT\n      FROZEN\n      INITIAL\n      PENDING_CLOSE\n      __typename\n    }\n    statsOfKycStats {\n      FAILURE\n      INIT\n      SUBMITTED\n      SUCCESS\n      __typename\n    }\n    statsOfLinkType {\n      email\n      phone\n      __typename\n    }\n    submissionIp {\n      geoInfo {\n        city\n        country\n        riskRating\n        __typename\n      }\n      ip\n      __typename\n    }\n    total\n    watchListCategories\n    watchListHitsCount\n    __typename\n  }\n}\n',
+        'variables': {
+            'accStatuses': ['CLOSED'],
+            'beforeKycReceived': True,
+            'legalEntityId': legal_entity_id,
+            'pageNumber': 1,
+            'pageSize': 10000,
+            'types': ['director'],
+        }
+    }
+    r = requests.post(url=url, data=json.dumps(data), headers=HEADER).text
+    time.sleep(0.1)
+    r = r.replace('false', 'False').replace('null', 'None').replace('true', 'True')
+    r = ast.literal_eval(r)
+    return r
+
+# 接口调用模版2
+def search_datacenter(legal_entity_id=None, account_id=None, token=None):
+    headers = set_headers(datacenter='HK', token=token[7:])  # reset to be default
+    url = 'https://airboard-ng.airwallex.com/graphql/kyc/getLegalEntityList'
+    data = {
+        'operationName': 'getLegalEntityList',
+        'query': 'query getLegalEntityList($params: GetLegalEntityListParam) {\n  getLegalEntityList(params: $params) {\n    data {\n      account_id\n      account_open_id\n      agreed_to_terms_and_conditions\n      business_structure\n      client_legal_entity_id\n      country\n      customer_name_english\n      customer_name_local\n      industry_category\n      kyc_created_time\n      kyc_passed_time\n      kyc_process_status\n      risk_rating\n      __typename\n    }\n    total\n    __typename\n  }\n}\n',
+        'variables': {
+            'params': {
+                'from': 0,
+                'size': 10,
+            }
+        }
+    }
+    if account_id is None:
+        data['variables']['params']['client_legal_entity_id'] = legal_entity_id
+    else:
+        data['variables']['params']['account_id'] = account_id
+    r = requests.post(url=url, headers=headers, data=json.dumps(data)).text
+    r = r.replace('false', 'False').replace('null', 'None').replace('true', 'True')
+    r = ast.literal_eval(r)
+    return r['data']['getLegalEntityList']['total']
+
+
+def datacenter_decorator(func):
+    def wrapper(*args, **kwargs):
+        account_id = kwargs.get('account_id')
+        legal_entity_id = kwargs.get('legal_entity_id')
+        token = kwargs.get('token')
+        datacenter = 'HK' if search_datacenter(account_id=account_id, legal_entity_id=legal_entity_id, token=token) > 0 else 'SG'
+        kwargs['datacenter'] = datacenter
+        return func(*args, **kwargs)
+    return wrapper
+
+
+def set_headers(datacenter, token):
+    return {
+        'Content-Type': 'application/json',
+        'authorization': token,
+        'x-data-center': datacenter,
+    }
+
+
+@datacenter_decorator
+def get_tm_case(datacenter, token, case_id, account_id=None, legal_entity_id=None):
+    url = 'https://airboard-ng.airwallex.com/graphql/postmonitoring/uar'
+    data = {
+        'operationName': 'getCaseById',
+        'query': 'query getCaseById($caseUuid: ID!) {\n  getCaseById(caseUuid: $caseUuid) {\n    accountId\n    businessName\n    cardNumber\n    caseHandlingTeam\n    channelRfiTag\n    clientRole\n    comment\n    createdAt\n    createdBy\n    customerExternalBankAccountNumber\n    customerSegment\n    emailSubject\n    files {\n      fileId\n      fileName\n      __typename\n    }\n    isMigration\n    legalEntityId\n    level\n    merchantId\n    migration\n    orgLevel2\n    owningEntity\n    recallStatus\n    receivedAt\n    reviewer\n    rfiEmailTitle\n    rfiSentDate\n    rfiSessionId\n    rfiSessionStatus\n    riskTypes\n    sla\n    sourceChannel\n    sourceSubType {\n      cardScheme {\n        cardSchemeValue\n        __typename\n      }\n      channelFraud {\n        accountStatus\n        indemnity\n        indemnityEta\n        indemnityRequestDate\n        internalClientEscalation\n        isNewFraud\n        recallStatus\n        returnedAmount\n        returnedDate\n        ticketStatus\n        __typename\n      }\n      channelRfi {\n        accountBlockByChannel\n        internalClientEscalation\n        tag\n        __typename\n      }\n      value\n      __typename\n    }\n    sourceType\n    status\n    transactionIds\n    uuid\n    zendeskTicketNumber\n    __typename\n  }\n}',
+        'variables': {
+            'caseUuid': case_id,
+        }
+    }
+    headers = set_headers(datacenter=datacenter, token=token[7:])
+    r = requests.post(url=url, headers=headers, data=json.dumps(data)).text
+    r = r.replace('false', 'False').replace('null', 'None').replace('true', 'True')
+    r = ast.literal_eval(r)
+    return {
+        'accountId': r['data']['getCaseById']['accountId'],
+        'businessName': r['data']['getCaseById']['businessName'],
+        'legalEntityId': r['data']['getCaseById']['legalEntityId'],
+        'orgLevel2': r['data']['getCaseById']['orgLevel2'],
+        'owningEntity': r['data']['getCaseById']['owningEntity'],
+        'transactionId': r['data']['getCaseById']['transactionIds'][0],
+        'zendeskTicketNumber': r['data']['getCaseById']['zendeskTicketNumber'],
+    }
+
 # token transfer涉及上传文件
 def store_info(accountid):
     url = f'https://airboard-ng.airwallex.com/api/v1/clientdetail/getStoreInfoByAccountId?accountId%3D{accountid}'
