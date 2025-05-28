@@ -3,6 +3,13 @@
 ```txt
 : 用来“取json路径字段”，:: 是“强制转类型”，?:: 是“安全转类型”（失败就null）
 ```
+```
+get_json_object(to_json(sf.data), '$.accountManager')
+你的字段 data 是 struct 类型（或 map），直接用 :字段名 取子字段最自然。
+get_json_object 实际要操作 string 类型。如果参数不是字符串（而是struct），就会报错。
+第一个sf.data:accountManager是Spark为struct/map字段提供的语法糖，推荐优先用
+```
+
 
 - ARRAY
   ```sql
