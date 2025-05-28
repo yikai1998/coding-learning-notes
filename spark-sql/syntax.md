@@ -14,3 +14,12 @@ Databricks、Spark 官方都不支持通过 SQL 写 "Python/Scala/Java" 逻辑�
 建临时视图（CREATE TEMP VIEW）——完全支持，强烈推荐。
 CREATE TEMP TABLE —— 语法不推荐／少数 Spark 版本才勉强兼容；优先用 VIEW 替代。
 ```
+
+```
+CREATE OR REPLACE TEMP VIEW t1 AS
+SELECT explode(array(struct(10, 20), struct(null, 55))) AS col;
+
+as后的query，不用加分号，也不要最外层括号
+CREATE VIEW/CREATE TABLE/CREATE TEMP VIEW 只做定义，没展示结果。
+只有 SELECT（或 SHOW TABLES）等查询动作，才会返回内容！
+```
