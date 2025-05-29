@@ -47,6 +47,21 @@ ORDER BY sale_date, product_name;
 
 <img width="622" alt="image" src="https://github.com/user-attachments/assets/c52e8220-3488-48e5-8a88-7e075d161450" />
 
+```sql
+# sample
+select * from (
+  select 
+  legal_entity_id,
+  txn_domain,
+  count(distinct txn_id) as txn_count,
+  sum(ifnull(txn_amount_usd, 0)) as txn_volume_usd
+  from manual_unified_table
+  group by legal_entity_id, txn_domain
+)
+pivot (
+  sum(txn_count) as txn_count, sum(txn_volume_usd) as txn_volume_usd for txn_domain in ('gtpn' as gtpn, 'issuing' as issuing, 'pa' as pa)
+)
+```
 
 <br> UNPIVOT operator with multiple columns
 
