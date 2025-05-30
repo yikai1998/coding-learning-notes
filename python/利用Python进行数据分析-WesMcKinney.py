@@ -3,7 +3,16 @@
 '''
 第二章 基础内容
 '''
-r
+
+# 补充
+```txt
+ts = 1748574315.7963982
+datetime.datetime.fromtimestamp(ts)
+默认返回的是你本地计算机时区的时间！
+如果你要得到UTC时间，应该用
+datetime.datetime.utcfromtimestamp(ts)
+```
+
 import datetime
 
 dt = datetime.datetime(2011, 10, 29, 20, 20, 10)
