@@ -246,3 +246,14 @@ def black_map(predicate, iterable):
 这一点逻辑上类似于：找“空子串”总会在任何串的开始、结束等地方。
 """
 
+
+# local runtime
+```txt
+download docker https://rancherdesktop.io/ 
+open the docker in backend
+open terminal
+    docker run -p 127.0.0.1:9000:8080 asia-docker.pkg.dev/colab-images/public/runtime
+    copy: http://127.0.0.1:9000/?token=e35da72d2944bbb745350bc40479454fbc998ab768434385
+
+import socket; print(socket.gethostname())
+```
