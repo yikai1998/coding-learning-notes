@@ -11,8 +11,33 @@ datetime.datetime.fromtimestamp(ts)
 默认返回的是你本地计算机时区的时间！
 如果你要得到UTC时间，应该用
 datetime.datetime.utcfromtimestamp(ts)
-```
 
+datetime = 玩转“日期、时刻”，全能型，适合几乎所有业务和字符串/时区转换/加减
+time = 操作系统时间、延时等底层场合用，sleep和时间戳主场
+部分能力有交集，但你按实际需求选哪个就行，没有强制限制！
+
+datetime 常用场景
+把字符串转datetime对象
+做时间加减
+取年月日等
+格式化成各种字符串
+和时区相关操作
+import datetime
+now = datetime.datetime.now()
+yesterday = now - datetime.timedelta(days=1)
+print(now.strftime('%Y-%m-%d %H:%M:%S'))
+
+time 常用场景
+获得当前时间戳（浮点秒）
+sleep/延时等待
+性能计时
+结构化本地/UTC时间
+import time
+start = time.time()
+time.sleep(2)
+print("Elapsed:", time.time() - start)
+```
+import time
 import datetime
 
 dt = datetime.datetime(2011, 10, 29, 20, 20, 10)
