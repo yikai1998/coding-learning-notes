@@ -64,3 +64,27 @@
 </html>
 ```
     
+# 来源：《新手学html+css》-- 北京希望电子出版社  
+```txt
+background-image: url(括号里填图片链接/地址); 必须同时设置高度和宽度
+background-repeat: no-repeat; 绑定的图片只出现一次
+background-repeat: repeat; 绑定的图片会重复出现，横向和纵向都会重复
+background-repeat: repeat-x; 绑定的图片会重复出现，横向
+background-repeat: repeat-y; 绑定的图片会重复出现，纵向
+```
+```html
+<style>
+    .temp-div-1 {
+    color: white;
+    background-image: url(kakashi.jfif);
+    width: 400px;
+    height: 800px;
+    background-repeat: repeat-x;
+    }
+</style>
+<body>
+    <div class="temp-div-1" c>
+        测试背景图片
+    </div>
+</body>
+```
