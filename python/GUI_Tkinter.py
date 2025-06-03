@@ -1407,3 +1407,156 @@ tkinter.Button(win3, text='选择', command=b).pack()
 win3.mainloop()
 
 #选择文件夹 ----askdirectory() 选择或创建一个文件夹，返回文件夹路径
+
+
+# 工作实操场景1 - qbc tool  
+```py
+import tkinter as tk
+from PIL import Image, ImageTk  # pip install pillow
+
+
+# 继承自Label，所以本质还是个Label
+class AnimatedGIF(tk.Label):
+    def __init__(self, master, path, width, height, delay=100):
+        tk.Label.__init__(self, master)
+        self.master = master  # master是你的父窗口
+        self.frames = []
+        self.delay = delay  # 每帧延迟，单位ms
+        self.resize_size = (width, height)
+
+        # 用Pillow打开GIF，然后一帧一帧读取，塞进self.frames这个list里
+        img = Image.open(path)
+        try:
+            while True:
+                frame = ImageTk.PhotoImage(img.copy().resize(self.resize_size, Image.LANCZOS))
+                self.frames.append(frame)
+                img.seek(len(self.frames))  # 跳到下一帧
+        except EOFError:
+            pass  # 到最后一帧会报错，忽略即可
+
+        self.idx = 0
+        self.show_frame()
+
+    def show_frame(self):
+        frame = self.frames[self.idx]  # 当前要显示谁
+        self.config(image=frame)  # 把label上显示的图片设成当前帧
+        self.idx = (self.idx + 1) % len(self.frames)  # 索引+1，如果走到最后一帧就回到0（循环）
+        self.after(self.delay, self.show_frame)  # 告诉Tkinter“delay毫秒以后再自动执行一次show_frame()
+
+---
+
+import gspread
+import re
+from ab_func import *
+import tkinter
+from decoration import AnimatedGIF
+import tkinter.messagebox as messagebox
+
+# tkinter
+mac = tkinter.Tk()
+
+# google-sheet service account
+sa = gspread.service_account('xxx.json')
+sh1 = sa.open('yikai workpaper')
+sh_work = sh1.worksheet('qbc2 [no delete]')
+
+
+# collect basic info
+def update_gsheet(payout_link, legal_entity_id, airboard_token):
+    match = re.search(r'/risk/uar/([-\w]+)', payout_link)
+    case_id = match.group(1)
+
+    # search further info from airboard
+    print('>> Extracting from airboard !')
+    temp_dic = {}
+    tm_case = get_tm_case(case_id=case_id, legal_entity_id=legal_entity_id, token=airboard_token)
+    txn_data = get_txn_data(txn_id=tm_case['transactionId'], token=airboard_token)
+    client_profile = get_client_profile(account_id=tm_case['accountId'], token=airboard_token)
+    temp_dic.update(tm_case)
+    temp_dic.update(txn_data)
+    temp_dic.update(client_profile)
+
+    # paste the info into google-sheet
+    print(temp_dic)
+    sh_work.update(range_name='A1', values=[list(temp_dic.keys()), list(temp_dic.values())])
+
+    print('>> Successfully done !')
+
+
+# button function
+def submit():
+    entry_1_input = entry_1.get().strip()
+    entry_2_input = entry_2.get().strip()
+    entry_3_input = entry_3.get().strip()
+
+    # 校验是否有未填
+    if not entry_1_input or not entry_2_input or not entry_3_input:
+        mac.attributes('-topmost', False)
+        messagebox.showwarning("输入有误", "请确保所有输入框都已填写！")
+        mac.attributes('-topmost', True)
+        return 0
+
+    print('Airboard-Payout-Link 为：' + entry_1_input)
+    print('Client-Legal-Entity-Id 为：' + entry_2_input)
+    print('Airboard-Access-Token 为：' + entry_3_input)
+    update_gsheet(payout_link=entry_1_input, legal_entity_id=entry_2_input, airboard_token=entry_3_input)
+    return 0
+
+
+def reset():
+    entry_1.delete(0, 'end')
+    entry_2.delete(0, 'end')
+    entry_3.delete(0, 'end')
+    return 0
+
+
+def fix_mac_paste(event):
+    # 取出这次快捷键事件按下时的控件对象
+    widget = event.widget
+    try:
+        # 如果控件内有选中的文字，先把它删除（这样粘贴内容能覆盖选中内容）
+        widget.delete('sel.first', 'sel.last')
+    except Exception:
+        # 如果没选中内容，会报错，用except跳过即可
+        pass
+    # 把剪贴板里的内容插入到当前光标的位置
+    widget.insert('insert', widget.clipboard_get())
+    return 'break'  # 此事件我自己已经处理好，不要让系统再处理一次（否则会多粘贴一次）
+
+
+# label
+text_1 = '输入 Airboard-Payout-Link '
+text_2 = '输入 Client-Legal-Entity-Id '
+text_3 = '输入 Airboard-Access-Token '
+text_1 = tkinter.Label(mac, text=text_1, fg='blue', font='华文新魏 20 bold')
+text_2 = tkinter.Label(mac, text=text_2, fg='red', font='华文新魏 20 bold')
+text_3 = tkinter.Label(mac, text=text_3, fg='green', font='华文新魏 20 bold')
+text_1.grid(row=0, column=0, sticky='NW')
+text_2.grid(row=2, column=0, sticky='NW')
+text_3.grid(row=4, column=0, sticky='NW')
+
+# entry
+entry_1 = tkinter.Entry(mac, width=80)
+entry_2 = tkinter.Entry(mac, width=80)
+entry_3 = tkinter.Entry(mac, width=80)
+entry_1.grid(row=0, column=3)
+entry_2.grid(row=2, column=3)
+entry_3.grid(row=4, column=3)
+entry_1.bind('<Command-v>', fix_mac_paste)
+entry_1.bind('<Control-v>', fix_mac_paste)
+entry_2.bind('<Command-v>', fix_mac_paste)
+entry_2.bind('<Control-v>', fix_mac_paste)
+entry_3.bind('<Command-v>', fix_mac_paste)
+entry_3.bind('<Control-v>', fix_mac_paste)
+
+# button
+tkinter.Button(mac, text='重置', command=reset).grid(row=7, column=0, columnspan=2)
+tkinter.Button(mac, text='提交', command=submit).grid(row=7, column=3, columnspan=2)
+
+# perform
+mac.geometry('1200x400')
+mac.attributes('-topmost', True)
+gif_label = AnimatedGIF(master=mac, path='../../self_workspace/giphy2.gif', delay=80, width=100, height=100)
+gif_label.grid(row=9, column=3)
+mac.mainloop()
+```
