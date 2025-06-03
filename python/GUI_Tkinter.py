@@ -1485,9 +1485,9 @@ def update_gsheet(payout_link, legal_entity_id, airboard_token):
 
 # button function
 def submit():
-    entry_1_input = entry_1.get().strip()
-    entry_2_input = entry_2.get().strip()
-    entry_3_input = entry_3.get().strip()
+    entry_1_input = dedup_paste(entry_1.get().replace('\n', '').strip())
+    entry_2_input = dedup_paste(entry_2.get().replace('\n', '').strip())
+    entry_3_input = dedup_paste(entry_3.get().replace('\n', '').strip())
 
     # 校验是否有未填
     if not entry_1_input or not entry_2_input or not entry_3_input:
@@ -1524,6 +1524,15 @@ def fix_mac_paste(event):
     return 'break'  # 此事件我自己已经处理好，不要让系统再处理一次（否则会多粘贴一次）
 
 
+def dedup_paste(s):
+    # 从第1个字符之后开始，找有没有出现“从开头到当前位置”的内容
+    for i in range(1, len(s)):
+        # 如果剩下的部分和开头能拼成一个重复（粘贴了两次）
+        if s.startswith(s[i:]):
+            return s[:i]
+    return s
+
+
 # label
 text_1 = '输入 Airboard-Payout-Link '
 text_2 = '输入 Client-Legal-Entity-Id '
@@ -1542,12 +1551,8 @@ entry_3 = tkinter.Entry(mac, width=80)
 entry_1.grid(row=0, column=3)
 entry_2.grid(row=2, column=3)
 entry_3.grid(row=4, column=3)
-entry_1.bind('<Command-v>', fix_mac_paste)
-entry_1.bind('<Control-v>', fix_mac_paste)
-entry_2.bind('<Command-v>', fix_mac_paste)
-entry_2.bind('<Control-v>', fix_mac_paste)
-entry_3.bind('<Command-v>', fix_mac_paste)
-entry_3.bind('<Control-v>', fix_mac_paste)
+mac.bind_class('<Command-v>', fix_mac_paste)
+mac.bind_class('<Control-v>', fix_mac_paste)
 
 # button
 tkinter.Button(mac, text='重置', command=reset).grid(row=7, column=0, columnspan=2)
@@ -1556,7 +1561,11 @@ tkinter.Button(mac, text='提交', command=submit).grid(row=7, column=3, columns
 # perform
 mac.geometry('1200x400')
 mac.attributes('-topmost', True)
-gif_label = AnimatedGIF(master=mac, path='../../self_workspace/giphy2.gif', delay=80, width=100, height=100)
-gif_label.grid(row=9, column=3)
+mac.after(5000, lambda: mac.attributes('-topmost', False))  # 5秒后允许被其它窗口覆盖
+gif_label_1 = AnimatedGIF(master=mac, path='../../self_workspace/giphy.gif', delay=80, width=100, height=100)
+gif_label_2 = AnimatedGIF(master=mac, path='../../self_workspace/giphy2.gif', delay=80, width=100, height=100)
+gif_label_1.grid(row=9, column=0)
+gif_label_2.grid(row=9, column=3)
 mac.mainloop()
+
 ```
