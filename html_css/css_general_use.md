@@ -65,12 +65,16 @@
 ```
     
 # 来源：《新手学html+css》-- 北京希望电子出版社  
+## 背景
 ```txt
 background-image: url(括号里填图片链接/地址); 必须同时设置高度和宽度
 background-repeat: no-repeat; 绑定的图片只出现一次
 background-repeat: repeat; 绑定的图片会重复出现，横向和纵向都会重复
 background-repeat: repeat-x; 绑定的图片会重复出现，横向
 background-repeat: repeat-y; 绑定的图片会重复出现，纵向
+background-attachment: fixed; 图片不会随着页面的滚动而滚动(消失)
+background-attachment: scroll; 图片会随着页面的滚动而滚动(消失)
+background-position 只有在背景图片只有一个的时候才生效 即no-repeat top/center/bottom/left/center/right
 ```
 ```html
 <style>
@@ -87,4 +91,38 @@ background-repeat: repeat-y; 绑定的图片会重复出现，纵向
         测试背景图片
     </div>
 </body>
+```
+```txt
+综合声明background:
+<style>
+    .temp-div-1 {
+    color: purple;
+    background: url(kyubi.jfif) repeat;
+    width: 1200px;
+    height: 1000px;
+    }
+</style>
+```
+## 文本
+```txt
+color 文本颜色
+letter-spacing 字符间距
+line-height 行间距
+text-align 文本对齐方式
+text-decoration underline下划线 line-through删除线 overline上划线
+text-indent 首行缩进
+text-transform capitalize每个单词的首字母大写 uppercase lowercase
+white-space normal按照浏览器默认展示 pre和nowrap效果是一样的，文本内容超出框架宽度也不会换行，除非遇到换行符
+font-size 字体大小
+font-family 字体风格
+```
+```html
+    <table border="2">
+        <tr>
+            <td style="color: green; letter-spacing: 15px; text-decoration: line-through">庐山升龙霸</td>
+            <td style="color: red; text-indent: 20px; width: 150px; font-size: 40px; font-family: 'KaiTi'">庐山百龙霸</td>
+            <td style="line-height: 55px; width: 30px; text-align: right;">庐山千龙霸</td>
+            <td style="text-transform: uppercase; white-space: nowrap; font-family: cursive;">Fuck Airwallex, Fuck Airboard, Fuck Air everything oh yeah!</td>
+        </tr>
+    </table>
 ```
