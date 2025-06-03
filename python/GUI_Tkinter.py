@@ -1551,8 +1551,10 @@ entry_3 = tkinter.Entry(mac, width=80)
 entry_1.grid(row=0, column=3)
 entry_2.grid(row=2, column=3)
 entry_3.grid(row=4, column=3)
-mac.bind_class('<Command-v>', fix_mac_paste)
-mac.bind_class('<Control-v>', fix_mac_paste)
+mac.bind_class('Entry', '<Command-v>', fix_mac_paste)  # 绑定的是 "按下 cmd+小写v"
+mac.bind_class('Entry', '<Control-v>', fix_mac_paste)
+mac.bind_class('Entry', '<Command-V>', fix_mac_paste)  # 绑定的是 "按下 cmd+Shift+v"; MAC下，LOCK的cmd+V 不适用
+mac.bind_class('Entry', '<Control-V>', fix_mac_paste)
 
 # button
 tkinter.Button(mac, text='重置', command=reset).grid(row=7, column=0, columnspan=2)
