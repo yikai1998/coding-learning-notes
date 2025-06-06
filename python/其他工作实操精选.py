@@ -63,7 +63,7 @@ def get_risk_common_info(legal_entity_id):
     r = r.replace('false', 'False').replace('null', 'None').replace('true', 'True')
     r = ast.literal_eval(r)
     return r
-
+---
 # 接口调用模版2
 def search_datacenter(legal_entity_id=None, account_id=None, token=None):
     headers = set_headers(datacenter='HK', token=token[7:])  # reset to be default
@@ -130,102 +130,124 @@ def get_tm_case(datacenter, token, case_id, account_id=None, legal_entity_id=Non
         'transactionId': r['data']['getCaseById']['transactionIds'][0],
         'zendeskTicketNumber': r['data']['getCaseById']['zendeskTicketNumber'],
     }
-
+---
 # token transfer涉及上传文件
-def store_info(accountid):
-    url = f'https://airboard-ng.airwallex.com/api/v1/clientdetail/getStoreInfoByAccountId?accountId%3D{accountid}'
-    r = requests.get(url=url, headers=awx_headers).text
-    r = r.replace('false', 'False').replace('null', 'None').replace('true', 'True')
-    r = ast.literal_eval(r)
-    with open(file=f_name, mode='a', encoding='utf-8') as f:
-        f.write(str(r) + '\n')
-    return r
+import requests
+from config import *
+import json
+import ast
+import mimetypes
+import tkinter
+from tkinter.filedialog import *
+import tkinter.messagebox as messagebox
+from bs4 import BeautifulSoup
+
+# variables
+uploaded_attachments = []
 
 
-def get_upload_key(accountid):
-    url = 'https://airboard-ng.airwallex.com/api/v1/common/prepareForUpload'
+def generate_upload_link(mimetype):
+    url = 'https://airboard-ng.airwallex.com/graphql/account/generateUploadLink'
     data = {
-        'mimeTypes': ['application/pdf']
+        'operationName': 'generateUploadLink',
+        'query': "mutation generateUploadLink($mimeTypes: String) {\n  generateUploadLink(mimeTypes: $mimeTypes) {\n    data {\n      endpoint\n      id\n      form_data {\n        OSSAccessKeyId\n        Signature\n        key\n        policy\n        googAlgorithm\n        googCredential\n        googDate\n        googSignature\n        contentType\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n",
+        'variables': {'mimeTypes': mimetype},
     }
-    awx_headers['Referer'] = f'https://airboard-ng.airwallex.com/clientinfo/clientdetail/{accountid}'
     r = requests.post(url=url, data=json.dumps(data), headers=awx_headers).text
     r = r.replace('false', 'False').replace('null', 'None').replace('true', 'True')
-    r = ast.literal_eval(r)
-    with open(file=f_name, mode='a', encoding='utf-8') as f:
-        f.write(str(r) + '\n')
-    return r['data'][0]['endpoint'], r['data'][0]['form_data']
+    r = ast.literal_eval(r)  # 不管你files叫啥名，OSS(Object Storage Service)主要根据你form-data里的key字段来存放文件
+    return r['data']['generateUploadLink']['data'][0]['endpoint'], r['data']['generateUploadLink']['data'][0]['form_data']
 
 
-def aliyun_enable(url, form_data):
-    form_data['Content-Disposition'] = "attachment;filename='Airwallex Mail - Re_ Token Transfer Supporting Material.pdf'"
-    with open('Airwallex Mail - Re_ Token Transfer Supporting Material.pdf', "rb") as f:
-        file = {"file": ('Airwallex Mail - Re_ Token Transfer Supporting Material.pdf', f, "application/pdf")}
+def aliyun_enable(url, form_data, file_name, mimetype):
+    global uploaded_attachments
+    with open(file=file_name, mode='rb') as f:
+        file = {'file': (file_name, f, mimetype)}
         r = requests.post(url=url, data=form_data, files=file)
-        with open(file=f_name, mode='a', encoding='utf-8') as f:
-            f.write(str(r) + '\n')
-        # print(r.status_code)  # 204 means success
-        # print(r.text)
+        if r.status_code == 204:
+            print('>> Uploaded successfully...')
+            uploaded_attachments.append(form_data)
+        else:
+            raise f'>> {r.text}'
 
 
-def get_file_byId(key):
-    url = f'https://airboard-ng.airwallex.com/api/v1/common/getFileById?fileId%3D{key}'
-    r = requests.get(url=url, headers=awx_headers).text
-    r = r.replace('false', 'False').replace('null', 'None').replace('true', 'True')
-    r = ast.literal_eval(r)
-    with open(file=f_name, mode='a', encoding='utf-8') as f:
-        f.write(str(r) + '\n')
+def select_upload_files(app):
+    fl = askopenfilenames(filetypes=[('全部文件', '*.*')], initialdir='.', parent=app)
+    accept_list = [
+        'image/apng',
+        'image/heic',
+        'image/heic-sequence',
+        'image/heif',
+        'image/heif-sequence',
+        'image/bmp',
+        'image/png',
+        'image/jpeg',
+        'image/jpg',
+        'image/tiff',
+        'image/tiff-fx',
+        'image/webp',
+        'application/pdf',
+        'text/csv',
+        'text/html',
+        'application/msword',
+        'application/vnd.ms-excel',
+        'application/x-x509-ca-cert',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'application/zip',
+        'application/x-zip-compressed',
+        'video/webm',
+    ]
+    pass_dic = []
+    for i in fl:
+        mimetype, encoding = mimetypes.guess_type(i)
+        if mimetype not in accept_list:
+            print(i, mimetype, 'A non supported MimeType was provided')
+            return
+        else:
+            print(i, mimetype, 'Passed')
+            pass_dic.append({'fileName': i, 'mimeType': mimetype})
+    if len(pass_dic) > 0:
+        for file in pass_dic:
+            print(file)
+            end_url, form_data = generate_upload_link(mimetype=file['mimeType'])
+            aliyun_enable(url=end_url, form_data=form_data, file_name=file['fileName'], mimetype=file['mimeType'])
+
+        print('>> All Completed ...')
+        messagebox.showinfo(title='上传成功', message='所有文件均已上传成功！', parent=app)
+    else:
+        messagebox.showwarning(title='结束', message='没有文件被上传！', parent=app)
+    app.destroy()
+    return
 
 
-def transfer_store(from_accountid, to_accountid, doc, value_list, comment=f'batch process - {datetime.datetime.now()}'):
-    url = 'https://airboard-ng.airwallex.com/api/v1/clientdetail/transferStore'
+def trigger_attachment():
+    mac = tkinter.Tk()
+    mac.attributes('-topmost', True)
+    mac.after(5000, lambda: mac.attributes('-topmost', False))  # 5秒后允许被其它窗口覆盖
+    tkinter.Button(mac, command=lambda: select_upload_files(app=mac), text='select and upload files').pack()
+    mac.geometry('1200x400')
+    mac.mainloop()
+
+
+def find_attachment(file_id):
+    url = 'https://airboard-ng.airwallex.com/graphql/account/getFileById'
     data = {
-        'data': {
-            'comment': comment,
-            'fromAccountId': from_accountid,
-            'supportingDocUrls': doc,
-            'toAccountId': to_accountid,
-        },
-        'operatorInfo': {
-            'email': 'ben.chen@airwallex.com',
-            'id': 330,
-            'name': 'Ben Chen - Python Auto',
-            'roles': [],
-        },
-        'stores': value_list,
+        'operationName': 'getFileById',
+        'query': "query getFileById($fileId: String) {\n  getFileById(fileId: $fileId) {\n    url\n    content_type\n    filename\n    size\n    __typename\n  }\n}\n",
+        'variables': {'fileId': file_id}
     }
     r = requests.post(url=url, data=json.dumps(data), headers=awx_headers).text
     r = r.replace('false', 'False').replace('null', 'None').replace('true', 'True')
     r = ast.literal_eval(r)
-    with open(file=f_name, mode='a', encoding='utf-8') as f:
-        f.write(str(r) + '\n')
     return r
-
-...
-if __name__ == '__main__':
-    from_accountid = 'ab821f5c-c1e5-48f8-98f9-1733c74694df'
-    to_accountid = 'ab821f5c-c1e5-48f8-98f9-1733c74694df'
-    # get the client basic info, e.g. if it is active
-    client_info(accountid=from_accountid)
-    # get the client store info, and choose the migration scope
-    stores = store_info(accountid=from_accountid)
-    # upload file
-    furl, fkey = get_upload_key(accountid=from_accountid)
-    aliyun_enable(url=furl, form_data=fkey)
-    get_file_byId(key=fkey['key'])
-    # actually transfer
-    for s in stores['data']['values']:
-        value_list = []
-        value_list.append(s)
-        r = transfer_store(from_accountid=from_accountid, to_accountid=to_accountid, doc=['/'.join([fkey['key'], 'Airwallex Mail - Re_ Token Transfer Supporting Material.pdf'])], value_list=value_list)
-        if r['success']:
-            print('token transferred successfully')
-
+---
 # decode token
 import jwt
 def decode_token(self, token):
     pload = jwt.decode(token, options={'verify_signature': False})
     return pload
-
+---
 # map btw two list
 def black_map(predicate, iterable):
     """
@@ -238,7 +260,7 @@ def black_map(predicate, iterable):
     for x in iterable:
         if predicate(x):
             yield x
-
+---
 # bug经验
 """
 在Python中，空字符串 '' 被认为在任何字符串中，所以
@@ -246,7 +268,7 @@ def black_map(predicate, iterable):
 这一点逻辑上类似于：找“空子串”总会在任何串的开始、结束等地方。
 """
 
-
+---
 # local runtime
 ```txt
 download docker https://rancherdesktop.io/ 
