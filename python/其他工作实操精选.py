@@ -261,6 +261,13 @@ def black_map(predicate, iterable):
         if predicate(x):
             yield x
 ---
+# 读取html
+    with open(html_path, encoding='utf-8') as f:
+        # 默认先只考虑一个html文件，如果内容很多就先合并进一个文件中
+        html = f.read()
+    soup = BeautifulSoup(html, 'html.parser')
+    body_content = soup.body.decode_contents()
+---
 # bug经验
 """
 在Python中，空字符串 '' 被认为在任何字符串中，所以
