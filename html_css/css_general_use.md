@@ -115,6 +115,7 @@ text-transform capitalize每个单词的首字母大写 uppercase lowercase
 white-space normal按照浏览器默认展示 pre和nowrap效果是一样的，文本内容超出框架宽度也不会换行，除非遇到换行符
 font-size 字体大小
 font-family 字体风格
+CSS的简写属性来同时设置多个字体相关属性    font: bold italic 40px 'KaiTi', sans-serif;
 ```
 ```html
     <table border="2">
@@ -125,4 +126,55 @@ font-family 字体风格
             <td style="text-transform: uppercase; white-space: nowrap; font-family: cursive;">Fuck Airwallex, Fuck Airboard, Fuck Air everything oh yeah!</td>
         </tr>
     </table>
+```
+## 边框  
+```txt
+border-color 边框颜色 可以针对四条边框 “上-右-下-左” 它需要与 border-width(xxx px) 和 border-style(solid dashed dotted double) 一起使用，才能正确显示边框
+```
+```html
+<style>
+    .temp-div-1 {
+    color: purple;
+    border-color: red green black blue;
+    border-width: 10px;
+    width: 80px;
+    height: 130px;
+    border-style: groove;
+    }
+</style>
+<body>
+    <div class="temp-div-1" >
+        你好 上海
+    </div>
+</body>
+```
+## 边距  
+```txt
+外边距 margin-top margin-right margin-bottom margin-left margin(综合声明 按照“上-右-下-左”的顺序)
+内边距 padding-top padding-right padding-bottom padding-left padding (padding 属性没有 auto 值)
+```
+```html
+<style>
+    .temp-div-1 {
+    margin:100px auto;  <!-- 上下边距 左右边距 -->
+    padding: 30px 40px 50px 90px;
+    width: 400px;
+    height: 100px;
+    border-color: red;
+    border-width: 5px;
+    border-style: groove;
+    }
+</style>
+<body>
+    <div class="temp-div-1" >
+        你好 上海
+    </div>
+</body>
+```
+## 列表
+```txt
+图片作为排序标签 list-style-image: url(path);
+图案作为排序标签 list-style-type: disc/circle/square/decimal/lower-roman/lower-alpha/upper-latin/lower-greek/...
+list-style-position outside/inside  排序标记是否显示在文本内容里
+list-style 综合属性 list-style: url('kakashi.jfif') inside;
 ```
