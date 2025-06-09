@@ -162,21 +162,25 @@ div {
 - `li:nth-last-child(n)` `li:nth-last-of-type(n)` 相似原理
 - `:only-child`满足只有一个子元素的
 - `p:not(.p1)` 表示针对除了class为p1的p标签； 同理 `p:not(:nth-child(3))`
-```
+```html
 <style>
-  p:hover {
-    color: yellow;
-  }
-  a:visited {
-    color: red;
-  }
+    a.awx:link {
+        color: green;
+    }
+    a.awx:hover {
+        color: red;
+        text-decoration: line-through;
+    }
 </style>
+<body>
+    <a href="http://airwallex.com" class="awx">空中云汇官网</a>
+</body>
 ```
 
-伪元素表示特殊的位置，用`::`开头  
+伪元素表示元素特殊的位置，用`::`开头  
 - `::before`表示元素的开始位置，开始标签之后
 - `::after`表示元素的结束位置，结束标签之前
-- content里的内容是通过css添加的，不算是网页中的正是内容，所以爬虫抓不到数据
+- content里的内容是通过css添加的，不算是网页中的正式内容，所以爬虫抓不到数据
 - 可以统一批量的给标签文字前加内容，比如符号
 ```
 <style>
@@ -186,9 +190,22 @@ div {
   }
 </style>
 ```
-- `::selection`
+- `::selection` 自定义选中文本的样式
 - `::first-line`
 - `::first-letter`
+```html
+<style>
+    p::selection {
+        color: purple;
+    }
+</style>
+<body>
+    <p>
+        锄禾日当午<br>
+        汗滴禾下土
+    </p>
+</body>
+```
 
 ---
 
