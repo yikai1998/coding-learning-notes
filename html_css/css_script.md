@@ -2,8 +2,8 @@
 在html中插入脚本 主要用来实现一些动态的页面效果   
 type="text/javascript" 这个属性是可选的，因为HTML5中默认的脚本类型就是 text/javascript；可以省略这个属性，代码仍然可以正常工作  
 document.write 是一种古老的 JavaScript 方法，用于向浏览器的文档流中直接写内容。虽然在简单的示例中可以使用，但它有一些局限性和潜在问题。现代的 JavaScript 开发中，通常推荐使用更现代的方法来操作 DOM  
-<noscript> 标签用于定义在脚本未运行时显示的内容。它通常用于向不支持或禁用了 JavaScript 的用户提供备用内容  
-<object> 标签在某些情况下仍然有用，但现代网页设计中更倾向于使用更具体和现代的标签，如 <audio>、<video>、<embed> 和 <iframe>。这些现代标签提供了更好的兼容性和更清晰的语义  
+`<noscript>` 标签用于定义在脚本未运行时显示的内容。它通常用于向不支持或禁用了 JavaScript 的用户提供备用内容  
+`<object>` 标签在某些情况下仍然有用，但现代网页设计中更倾向于使用更具体和现代的标签，如 `<audio>、<video>、<embed> 和 <iframe>`。这些现代标签提供了更好的兼容性和更清晰的语义  
 ```html
     <div id="msg"></div>
     <script>document.getElementById("msg").textContent = "你个傻逼"</script>
