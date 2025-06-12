@@ -1563,6 +1563,7 @@ tkinter.Button(mac, text='提交', command=submit).grid(row=7, column=3, columns
 # perform
 mac.geometry('1200x400')
 mac.attributes('-topmost', True)
+mac.focus_force()  # 强制获取焦点
 mac.after(5000, lambda: mac.attributes('-topmost', False))  # 5秒后允许被其它窗口覆盖
 gif_label_1 = AnimatedGIF(master=mac, path='../../self_workspace/giphy.gif', delay=80, width=100, height=100)
 gif_label_2 = AnimatedGIF(master=mac, path='../../self_workspace/giphy2.gif', delay=80, width=100, height=100)
