@@ -127,3 +127,14 @@ keyup：按键释放事件。
             outputDiv.textContent = 'You right-clicked at (' + event.clientX + ', ' + event.clientY + ')';
         });
 ```
+```txt
+submit：表单提交事件。
+change：表单元素值改变事件。
+input：表单元素值输入事件。
+focus：元素获得焦点事件。
+blur：元素失去焦点事件。
+load：页面或资源加载完成事件。
+unload：页面或资源卸载事件。
+resize：窗口大小改变事件。
+scroll：滚动事件。
+```
