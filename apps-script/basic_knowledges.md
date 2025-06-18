@@ -111,3 +111,13 @@ new Set(member_list) 创建一个 Set 对象，Set 只存储唯一值
 [...new Set(member_list)] 使用展开运算符将 Set 转回数组
 这是 ES6 引入的一种简洁高效的数组去重方法。
 ```
+
+---
+
+```js
+在JavaScript中，如果属性名（对象的键名）满足以下条件，可以不加引号：
+
+以字母、下划线(_)或美元符号($)开头
+后续字符可以是字母、数字、下划线或美元符号
+不是JavaScript保留字(如if, class, return等)
+```
