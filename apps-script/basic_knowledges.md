@@ -81,3 +81,23 @@ function forEachExample() {
   }); 
 } 
 ``` 
+
+---
+
+In JavaScript, the three dots (...) represent the spread syntax  
+```js
+const originalArray = [1, 2, 3];
+const copiedArray = [...originalArray]; // [1, 2, 3]
+
+const originalObject = { a: 1, b: 2 };
+const copiedObject = { ...originalObject }; // { a: 1, b: 2 }
+
+const numbers = [1, 2];
+const newNumbers = [...numbers, 3, 4]; // [1, 2, 3, 4]
+
+function sum(a, b, c) {
+    return a + b + c;
+}
+const args = [1, 2, 3];
+const result = sum(...args); // 6
+```
