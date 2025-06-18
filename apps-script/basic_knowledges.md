@@ -101,3 +101,13 @@ function sum(a, b, c) {
 const args = [1, 2, 3];
 const result = sum(...args); // 6
 ```
+
+---
+
+```js
+var unique_member_list = [...new Set(member_list)] 是一个简洁地去除数组中重复值的方法：
+
+new Set(member_list) 创建一个 Set 对象，Set 只存储唯一值
+[...new Set(member_list)] 使用展开运算符将 Set 转回数组
+这是 ES6 引入的一种简洁高效的数组去重方法。
+```
