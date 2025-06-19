@@ -1523,13 +1523,24 @@ def fix_mac_paste(event):
     widget.insert('insert', widget.clipboard_get())
     return 'break'  # 此事件我自己已经处理好，不要让系统再处理一次（否则会多粘贴一次）
 
-
+"""
 def dedup_paste(s):
     # 从第1个字符之后开始，找有没有出现“从开头到当前位置”的内容
     for i in range(1, len(s)):
         # 如果剩下的部分和开头能拼成一个重复（粘贴了两次）
         if s.startswith(s[i:]):
             return s[:i]
+    return s
+上面这段的 s.startswith(s[i:])，会在任意有前缀相等的地方都返回True，不论整体是否整除字符串长度，容易误判！
+"""
+
+def dedup_paste(s):
+    n = len(s)
+    for i in range(1, n//2 + 1):  # 尝试遍历每一个可能的子串长度i，从1到字符串长度的一半（包含），因为超过一半的长度，重复就甭说了
+        if n % i == 0:  # 判断字符串长度n能否被当前子串长度i整除。这是为了后面可以整整齐齐地将s“分成”若干个i长度的段
+            part = s[:i]  # 取字符串的第一个i个字符，作为“候选重复部分”
+            if part * (n // i) == s:  # 试一试这个part连续拼(n//i)次，能否正好等于原字符串s
+                return part
     return s
 
 
