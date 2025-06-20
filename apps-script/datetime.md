@@ -10,6 +10,9 @@ function getFormattedCurrentDateTime() {
   Logger.log(formattedDateTime)
 } 
 ```
+```gs
+  today = [today.getFullYear(), (today.getMonth()+1).toString().padStart(2, '0'), (today.getDate()).toString().padStart(2, '0')].join('-')
+```
 
 ```
 yyyy: Four-digit year. 
