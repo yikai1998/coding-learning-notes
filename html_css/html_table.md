@@ -70,3 +70,52 @@
 </body>
 </html>
 ```
+```html
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        table {
+            width: 80%;
+            border-collapse: collapse;
+        }
+        td {
+            height: 200px;
+            border: 1px black solid;
+            text-align: center;  /*文字在表格中会自动被“垂直”居中，所以`vertical-align: middle`是个废物*/
+        }
+        .box1 {
+            display: table-cell;  /*将他视为表格格子，这样就可以让他垂直居中了*/
+            width: 400px;
+            height: 400px;
+            border: 10px red solid;
+            vertical-align: middle;
+        }
+        .box2 {
+            width: 100px;
+            height: 100px;
+            background-color: green;
+            margin: 0 auto;  /*水平居中*/
+        }
+    </style>
+</head>
+<body>
+    <div class="box1">
+        <div class="box2"></div>
+    </div>
+    <table>
+        <tr>
+            <td>Apple</td>
+            <td>Banana</td>
+            <td>Cat</td>
+            <td>Dog</td>
+        </tr>
+    </table>
+</body>
+</html>
+```
