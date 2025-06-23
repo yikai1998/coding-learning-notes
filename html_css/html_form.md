@@ -46,7 +46,7 @@ textarea 文本区域 超出垂直范围的话会自动显示滚动条 水平方
 按钮  
 - 提交按钮 把表单里的信息提交到指定的地方 可以是网页 数据库 或其他地方
 ```html
-<input type="submit" name="diy name" id="unified id">
+<input type="submit" name="diy name" id="unified id" value="自定义按钮显示的值">
 ```
 - 清空按钮 清空表单里的用户填写信息
 ```html
