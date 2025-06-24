@@ -14,7 +14,7 @@ input 输入框
 - type = text 输入文字  
 - type = mail 输入邮箱，会自动校验邮箱格式
 - type = password 只会看到代替出现的密码保护符号，到底是*还是圆点 取决于浏览器
-- type = radio 单选框 value和name都是用来以后和js绑定的 如果希望实现单选效果，必须value和name都填，且都为同一个值 checked="checked"代表默认选择
+- type = radio 单选框 value和name都是用来以后和js绑定的 如果希望实现单选效果，必须value(提交给服务器的值)和name(分组)都填，且都为同一个值 checked="checked"代表默认选择
 ```html
     <input type="radio" value="choice" name="choice" checked="checked"> choiceA
     <input type="radio" value="choice" name="choice"> choiceB
