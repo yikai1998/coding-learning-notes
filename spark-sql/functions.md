@@ -285,3 +285,37 @@ from `tp-prod-sg`.`silver`.`authorisation__account` as a
 lateral view explode(cast(a.data:kycRecord:kycReviewedRecords as ARRAY<STRUCT<reviewDate:STRING, reviewResult:STRING, reviewType:STRING>>)) as r
 where a.id = '8f7ac892-b2aa-4f0c-afea-8ed67784e550'
 ```
+```sql
+-- 解析和展开
+SELECT 
+  id, 
+  item 
+FROM `fp-prod-sg`.silver.midas__midas_product
+LATERAL VIEW explode(from_json(price_matching_strategy?::string, 'ARRAY<STRING>')) e AS item
+WHERE id = 'PAYMENT_METHOD_FEE'
+
+
+-- 如果您只想获取整个数组而不展开
+SELECT 
+  id, 
+  from_json(price_matching_strategy?::string, 'ARRAY<STRING>') AS strategy_array
+FROM `fp-prod-sg`.silver.midas__midas_product
+WHERE id = 'PAYMENT_METHOD_FEE'
+
+
+["item1", "item2", "item3"]
+✅ 正确用法: 'ARRAY<STRING>'
+
+{"key1": "value1", "key2": "value2"}
+✅ 正确用法: 'MAP<STRING, STRING>'
+
+[
+  {"reviewDate": "2023-01-01", "reviewResult": "pass", "reviewType": "annual"},
+  {"reviewDate": "2023-06-01", "reviewResult": "fail", "reviewType": "interim"}
+]
+✅ 正确用法: 'ARRAY<STRUCT<reviewDate:STRING, reviewResult:STRING, reviewType:STRING>>'
+
+{"reviewDate": "2023-01-01", "reviewResult": "pass", "reviewType": "annual"}
+✅ 正确用法: 'STRUCT<reviewDate:STRING, reviewResult:STRING, reviewType:STRING>'
+```
+
