@@ -63,6 +63,80 @@
 </body>
 </html>
 ```
+## 关于“居中”的总结  
+方法1: `margin: 0 auto;`实现居中，原理是 利用盒子模型在水平布局时的等式（左右外边距+可见框宽度=包含块宽度），但也有缺点: 没法处理垂直居中，且居中的元素必须指定宽度  
+方法2: 如下。原理: 左右偏移量+左右外边距+可见框的宽度=包含块的宽度；同理“上下”。也有缺点: 宽高必须写死
+```html
+<style>
+    .box1 {
+        width: 400px;
+        height: 400px;
+        border: 10px red solid;
+        position: relative;
+    }
+    .box2 {
+        width: 200px;
+        height: 200px;
+        background-color: yellow;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin: auto;
+    }
+</style>
+```
+方法3: 通过表格。如下。缺点：水平居中还是得用老办法。第二种可以根据文字的内容动态控制子元素的宽度居中，子元素的宽度变成自适应。但如果父元素不指定宽度则会丢失宽度  
+```html
+    .box1 {
+        width: 400px;
+        height: 400px;
+        border: 10px red solid;
+        display: table-cell;
+        vertical-align: middle;
+    }
+    .box2 {
+        width: 200px;
+        height: 200px;
+        background-color: yellow;
+        margin: 0 auto;
+    }
+```
+```html
+<style>
+    .box1 {
+        width: 400px;
+        height: 400px;
+        border: 10px red solid;
+        display: table-cell;
+        vertical-align: middle;
+        text-align: center;
+    }
+    .box2 {
+
+        display: inline-block;
+        background-color: yellow;
+        margin: 0 auto;
+    }
+</style>
+```
+方法4: 弹性盒。最强大，没有以上局限性。如下
+```html
+<style>
+    .box1 {
+        width: 400px;
+        height: 400px;
+        border: 10px red solid;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .box2 {
+        background-color: yellow;
+    }
+</style>
+```
     
 # 来源：《新手学html+css》-- 北京希望电子出版社  
 ## 背景
