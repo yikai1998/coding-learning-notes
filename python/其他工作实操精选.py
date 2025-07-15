@@ -286,3 +286,104 @@ open terminal
 
 import socket; print(socket.gethostname())
 ```
+---
+# 自动刷新token，并并入自定义公式中
+```py
+class TokenManager:
+    def __init__(self):
+        self.refresh_token = None
+        self.access_token = None
+        self.access_bearer_token = None
+        self.token_expired_at = 0.0
+
+    def init_token(self):
+        self.refresh_token = input('>> Input Airboard-Refresh-Token: ')
+        self.access_token = input('>> Input Airboard-Access-Token: ')
+        self.access_bearer_token = self.access_token[:]
+        self.access_token = self.access_token[7:]  # 去掉"Bearer "前缀
+        decoded_jwt = jwt.decode(self.access_token, algorithms=['HS256'], options={'verify_signature': False})
+        self.token_expired_at = decoded_jwt['exp'] - 15 * 60
+        return self
+
+    def check_and_refresh_token(self):
+        current_time = time.time()
+        if current_time >= self.token_expired_at - 15 * 60:
+            print(f"Current time: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+            print(f"Token expires: {datetime.datetime.fromtimestamp(self.token_expired_at).strftime('%Y-%m-%d %H:%M:%S')}")
+            print('Token expired, refreshing...')
+            self.refresh_access_token()
+        else:
+            pass
+            # print('Token still valid...')
+
+    def refresh_access_token(self):
+        data = {
+            'refreshToken': self.refresh_token,
+            'email': 'ben.chen@airwallex.com',
+        }
+        headers = {
+            'Content-Type': 'application/json',
+            'authorization': self.access_bearer_token,
+            'x-data-center': 'HK',
+        }
+        url = 'https://airboard-ng.airwallex.com/api/v1/security/refresh'
+        try:
+            r = requests.post(url=url, data=json.dumps(data), headers=headers).text
+            r = r.replace('false', 'False').replace('null', 'None').replace('true', 'True')
+            r = ast.literal_eval(r)
+            self.access_token = r['data']['token']
+            self.refresh_token = r['data']['refreshToken']
+            decoded_jwt = jwt.decode(self.access_token, algorithms=['HS256'], options={'verify_signature': False})
+            self.token_expired_at = decoded_jwt['exp']
+            self.access_bearer_token = f"Bearer {self.access_token}"
+
+            update_info = {
+                'access_token': self.access_token,
+                'access_bearer_token': self.access_bearer_token,
+                'refresh_token': self.refresh_token,
+                'token_expired_at': self.token_expired_at,
+            }
+            print(update_info)
+        except Exception as e:
+            raise f"Error refreshing token: {e}"
+
+    def get_headers(self):
+        """返回带有当前有效token的请求头"""
+        return {
+            'Content-Type': 'application/json',
+            'authorization': self.access_bearer_token,
+            'x-data-center': 'HK',
+        }
+
+class AccountFunctionClub:
+    def __init__(self, token_manager):
+        # airboard token
+        self.token = 'xxxx-xxxx-xxxx'
+        self.awx_headers = {
+            'Content-Type': 'application/json',
+            'authorization': 'TOKEN',
+            'x-data-center': 'HK'  # default
+        }
+        self.token_manager = token_manager
+
+    def global_account_info(self, row):
+        self.token_manager.check_and_refresh_token()
+        headers = self.token_manager.get_headers()
+        gaid = row['gaid']
+        dc = row['dc']
+        url = f'https://airboard-ng.airwallex.com/api/v1/accountList/ga?createTimeRangeByDay%3D2016-01-01%2C2028-05-31%26vbaId%3D{gaid}%26pageSize%3D100'
+        headers['x-data-center'] = 'SG' if dc.lower() == 'sg' else 'HK'
+        r = requests.get(url=url, headers=headers).text
+        r = r.replace('false', 'False').replace('null', 'None').replace('true', 'True')
+        r = ast.literal_eval(r)
+        return r
+
+# working
+token_manager = airboard_func.TokenManager()
+abFuncs = airboard_func.AccountFunctionClub(token_manager=token_manager)
+...
+token_manager.init_token()
+    for row in tqdm(df_combine, desc='retrieving ga info'):
+        data_return = abFuncs.global_account_info(row=row)
+        ...
+```
