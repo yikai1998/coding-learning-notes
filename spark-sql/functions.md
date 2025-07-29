@@ -146,6 +146,18 @@ SELECT get_json_object('{"a":"b"}', '$.a');  -- b
 SELECT get_json_object('{"user":{"name":"张三", "age":18}, "status":"ok"}', '$.user.name');  -- 张三
 SELECT get_json_object('{"tags":["a","b","c"], "count": 3}', '$.tags[1]');  -- b
 ```
+```sql
+-- 特殊 如果key是带引号的话
+SELECT
+  get_json_object(extra_info::string,
+    "$.oktaUser['urn:ietf:params:scim:schemas:extension:enterprise:2.0:User']") AS enterprise_raw,
+  get_json_object(extra_info::string,
+    '$.oktaUser.schemas[1]') AS idname,
+    extra_info,
+    *
+FROM `tp-prod-sg`.silver.airboardngauth__account
+where id = '330'
+```
 - json_array_length(jsonArray) 
 - json_object_keys(json_object)
 - json_tuple  // 能一次性从 JSON 字符串里“批量取出多个字段”，每个字段单独成一列。它只支持扁平、不嵌套的key
