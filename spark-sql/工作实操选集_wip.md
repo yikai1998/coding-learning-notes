@@ -47,3 +47,22 @@ where 1 = 1
 and ke.`data`:onboardDetails:createdByRole::string = '00000000-0000-0000-0000-000000040000'  -- "Channel Partner", "渠道合作方。"
 */
 ```
+
+```sql
+-- airboard auth users
+create or replace view yikai_test_dbt.temp as (select
+  email as emp_email,
+  `id` as emp_id,
+  active,
+  deleted,
+  get_json_object(extra_info::string, "$.oktaUser['urn:ietf:params:scim:schemas:extension:enterprise:2.0:User'].employeeNumber") as emp_number,
+  get_json_object(extra_info::string, "$.oktaUser['urn:ietf:params:scim:schemas:extension:enterprise:2.0:User'].department") as emp_team,
+  get_json_object(extra_info::string, "$.oktaUser['urn:ietf:params:scim:schemas:extension:enterprise:2.0:User'].manager.value") as emp_manager
+from 
+  `tp-prod-sg`.silver.airboardngauth__account
+where 
+  1 = 1
+  and not deleted
+  and not frozen
+);
+```
