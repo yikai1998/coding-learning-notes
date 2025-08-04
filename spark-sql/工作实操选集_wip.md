@@ -17,8 +17,8 @@ where a.id = '02d3a4cf-b2fc-49ac-9922-e24b152ade4d'
 -- account base pool
 /*
 select distinct
-sf.legal_entity_id?::string,
-ac.id as account_id?::string,
+cast(sf.legal_entity_id as string) as legal_entity_id,
+cast(ac.id as string) as account_id,
 ac.`data`:accountDetails:businessDetails.businessName?::string as biz_name_local,
 ac.`data`:clientInternalInfo:owningEntity?::string as owning_entity,
 timestamp(ac.`data`:kycRecord:receiveTime) as kyc_receive_time,
