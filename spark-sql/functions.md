@@ -2,6 +2,20 @@
 
 # 主要是一些基本常见的函数整理  
 
+---
+## aggregate related
+- array_agg  // Collects and returns a list of non-unique elements.
+- listagg
+- string_agg
+```sql
+select 
+emo, 
+listagg(distinct grade, '*'),
+string_agg(distinct grade, '*')
+from values ('a', 'happy'), ('b', 'sad'), ('c', 'happy') as tab(grade, emo) 
+group by all;
+```
+
 --- 
 
 ## array related
