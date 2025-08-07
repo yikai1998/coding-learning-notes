@@ -320,6 +320,15 @@ FROM `fp-prod-sg`.silver.midas__midas_product
 LATERAL VIEW explode(from_json(price_matching_strategy?::string, 'ARRAY<STRING>')) e AS item
 WHERE id = 'PAYMENT_METHOD_FEE'
 
+select distinct
+cle.id as legal_entity_id,
+bpr,
+roles
+from `tp-prod-sg`.silver.authorisation__client_legal_entity as cle
+left join `tp-prod-sg`.silver.authorisation__business_profile as bp on bp.id = cle.data:profileId::string
+lateral view outer explode(cast(bp.data:businessPeople as array<struct<roles: array<string>, personId: string>>)) as bpr
+lateral view outer explode(bpr.roles) as roles
+where cle.id = '24a68250-3b1a-49b1-8302-b67d5d8a0290'
 
 -- 如果您只想获取整个数组而不展开
 SELECT 
