@@ -61,3 +61,20 @@ GROUP BY p.id, p.name, p.birthday
 HAVING AVG(s.score) > 80                  -- 平均分也要大于80
 ORDER BY avg_score DESC;
 ```
+
+```py
+把「直接粘来的 id 列表」先变成一个 Python 列表，再用 Notebook 的 参数注入 或 临时视图 两种方式，让后面的 SQL cell 直接当列来用
+# 把列表变成 DataFrame
+raw = """
+id1
+id2
+id3
+id4
+"""
+ids = [line.strip() for line in raw.strip().splitlines()]
+df = spark.createDataFrame([(i, 'hello') for i in ids], "id STRING, temp_str STRING")
+
+# 直接落到永久表或永久视图
+df.write.mode("overwrite").option("mergeSchema", "true").saveAsTable("`data-prod-sg`.yikai_test_dbt.tmp_ids")
+# 或者：df.createOrReplaceGlobalTempView("tmp_ids") 也可以，但不如落到表简单
+```
