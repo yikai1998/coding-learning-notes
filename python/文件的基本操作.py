@@ -42,10 +42,15 @@ with open(file=desktop+'三字经.txt', mode='r', encoding='utf-8') as ff, open(
     ff_copy.write(ff.read())
 
 
-# 重命名，且移动文件，os.rename默认提前存在该路径
-# os.makedirs(desktop+'newFolder2\\test', exist_ok=True)  # If any of these directories already exist, exist_ok=True will prevent os.makedirs from raising an error.
-# 如果路径中的某个部分已经存在，但不是一个目录而是一个文件，那么 os.makedirs 会抛出 FileExistsError，即使设置了 exist_ok=True。
-# os.rename(desktop+'三字经.txt', desktop+'newFolder2\\新三字经.txt')  # 当文件已存在时，无法创建该文件。
+# 假设 desktop = r"C:\Users\Ben\Desktop\\"
+os.makedirs(desktop+'newFolder2\\test', exist_ok=True)  
+# 如果 newFolder2 or test 已经是目录，不会报错。
+# 如果路径中任何层级有同名"文件"而不是目录，会报 FileExistsError。
+
+os.rename(desktop+'三字经.txt', desktop+'newFolder2\\新三字经.txt')  
+# 如果 newFolder2\新三字经.txt 已经存在（windows），会 FileExistsError。
+# 如果不存在，会移动&重命名文件。
+
 """ 
 os.mkdir() 
 This function is used to create a single directory level. 
