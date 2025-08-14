@@ -38,8 +38,10 @@ def check2(param=None):
 
 # 使用装饰器，传入参数
 @check2(param='special behavior')
-def div(a, b):
+def div(a, b, *args, **kwargs):
     return a / b if b != 0 else 'Cannot divide by zero'
+
+div(490, 80, 'eggs', dinner='noodles')
 
 
 # 使用装饰器，不传入参数
