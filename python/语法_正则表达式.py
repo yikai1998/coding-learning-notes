@@ -75,6 +75,11 @@ x|y
 例如 "z|food"能匹配"z"或"food"
 # "[z|f]ood" 则匹配"zood"或"food"
 
+s = "hello world"
+if re.search(r'good morning|hello world', s):
+    print("匹配成功")
+# 输出：匹配成功
+
 [xyz]
 字符集合
 匹配所包含的任意一个字符
