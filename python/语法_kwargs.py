@@ -76,3 +76,26 @@ func('arg1', 'arg2', 3, weather='spring', time='a.m', speed=5)
 # weather: spring
 # time: a.m
 # speed: 5
+
+
+# temp sample
+def build_model(blood, magic, gender, name='dead king', *args, **kwargs):
+    sp = kwargs.get('speed')
+    print(blood)
+    print(magic)
+    print(gender)
+    print(name)
+    print(args)
+    print(kwargs)
+    print(sp)
+    return 0
+
+
+build_model(300,  150, 'M', 'mountain king', 'apple', 'work work', speed=100, attack=999)
+# 300
+# 150
+# M
+# mountain king
+# ('apple', 'work work')
+# {'speed': 100, 'attack': 999}
+# 100
