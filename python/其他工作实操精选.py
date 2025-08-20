@@ -248,25 +248,22 @@ def decode_token(self, token):
     pload = jwt.decode(token, options={'verify_signature': False})
     return pload
 ---
-# map btw two list
-def black_map(predicate, iterable):
-    """
-    purpose to check against two list
-    reference:
-        https://docs.python.org/3/library/itertools.html#itertools.dropwhile [itertools 里特有的方法，不是随便命名的]
-        a= itertools.filterfalse(lambda x: x not in black, test)
-        https://blog.csdn.net/mieleizhi0522/article/details/82142856
-    """
+# map btw two list (“黑名单过滤”)
+def black_map(black, iterable):
+    black = set(black)
     for x in iterable:
-        if predicate(x):
+        if x not in black:
             yield x
+
+g = black_map(['a', 'b'], ['b', 'c', 'd'])
+print(list(g))               # ['c', 'd']
 ---
 # 读取html
-    with open(html_path, encoding='utf-8') as f:
-        # 默认先只考虑一个html文件，如果内容很多就先合并进一个文件中
-        html = f.read()
-    soup = BeautifulSoup(html, 'html.parser')
-    body_content = soup.body.decode_contents()
+with open(html_path, encoding='utf-8') as f:
+    # 默认先只考虑一个html文件，如果内容很多就先合并进一个文件中
+    html = f.read()
+soup = BeautifulSoup(html, 'html.parser')
+body_content = soup.body.decode_contents()
 ---
 # bug经验
 """
