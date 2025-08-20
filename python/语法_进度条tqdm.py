@@ -108,3 +108,25 @@ if __name__ == '__main__':
             for i, result in enumerate(p.imap(do_work, range(20))): 
                 pbar.update(1)  # Update the progress bar by 1 step 
                 pbar.set_description(f"Processing {i+1} {result}")  # Update the description to reflect the current item 
+
+
+# 用 tqdm.contrib.concurrent 最省事，一行代码就能让 concurrent.futures 的并发任务带进度条，且不需要自己维护 pbar.update()
+```py
+from tqdm.contrib.concurrent import thread_map, process_map
+
+# 线程池示例
+results = thread_map(
+    your_func,          # 要并发的函数
+    iterable,           # 可迭代对象
+    max_workers=8,      # 等价于 ThreadPoolExecutor(max_workers=8)
+    desc="Processing"   # 进度条描述
+)
+
+# 进程池示例（CPU 密集）
+results = process_map(
+    your_func,
+    iterable,
+    max_workers=4,
+    desc="Processing"
+)
+```
