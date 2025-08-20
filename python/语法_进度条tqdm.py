@@ -113,6 +113,7 @@ if __name__ == '__main__':
 # 用 tqdm.contrib.concurrent 最省事，一行代码就能让 concurrent.futures 的并发任务带进度条，且不需要自己维护 pbar.update()
 ```py
 from tqdm.contrib.concurrent import thread_map, process_map
+# 在内部就是一次性 executor.map，它天生没有 imap 的“边算边 yield”能力。只是在内部把 tqdm 包在一次性 map 上，进度条会动，但最终结果仍是整包返回，并不具备 imap 的“流式消费”能力。
 
 # 线程池示例
 results = thread_map(
@@ -129,4 +130,31 @@ results = process_map(
     max_workers=4,
     desc="Processing"
 )
+
+# 例子
+def activity(fruit):
+    time.sleep(0.2)          # 每个小块 0.2 秒
+    return fruit
+
+big_list = ['apple', 'banana', 'peach'] * 1000
+
+results = thread_map(activity, big_list, max_workers=8, desc="Processing")
+
+# 所以「实时进度条 + imap 的流式速度」只能自己用 concurrent.futures + as_completed 拼出来
+def activity(fruit):
+    time.sleep(0.2)
+    return fruit
+
+big_list = ['apple', 'banana', 'peach'] * 1000
+
+# 1. 先全部 submit，拿到 Future 列表
+with ThreadPoolExecutor(max_workers=8) as ex:
+    future_to_item = {ex.submit(activity, x): x for x in big_list}
+
+    # 2. as_completed 每完成一个就 yield 一个
+    results_in_completion_order = []
+    for f in tqdm(as_completed(future_to_item), total=len(future_to_item), desc="Processing"):
+        results_in_completion_order.append(f.result())
+
+print("已完成数量:", len(results_in_completion_order))
 ```
