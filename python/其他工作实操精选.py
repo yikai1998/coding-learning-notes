@@ -384,3 +384,16 @@ token_manager.init_token()
         data_return = abFuncs.global_account_info(row=row)
         ...
 ```
+
+---
+# 如何存储密钥
+"""
+你的密钥（如 KEY_TEMP=xxxxx）应该写在 .env 文件（无扩展名，纯文本文件）里。
+.env 文件里内容格式应该是KEY=VALUE，每行一个变量。不能写KEY_TEMP="abcd"、KEY_TEMP='abcd'那种 Python 代码，也不能有空格。
+pip install python-dotenv
+```import os
+from dotenv import load_dotenv
+load_dotenv()
+print(os.environ.get('KEY_TEMP'))```
+load_dotenv(dotenv_path='路径/到/你的.env')  # 如果你的.env不在同一目录下
+"""
