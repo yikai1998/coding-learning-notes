@@ -24,42 +24,9 @@ CREATE VIEW/CREATE TABLE/CREATE TEMP VIEW 只做定义，没展示结果。
 只有 SELECT（或 SHOW TABLES）等查询动作，才会返回内容！
 ```
 
-```sql
-# sample
--- 创建临时人员表
-CREATE OR REPLACE TEMP VIEW temp_people AS
-SELECT 1 AS id, 'Alice' AS name, DATE('2023-12-01') AS birthday
-UNION ALL
-SELECT 2, 'Bob', DATE('1995-05-23')
-UNION ALL
-SELECT 3, 'Cathy', DATE('2000-08-09');
-
--- 创建临时成绩表
-CREATE OR REPLACE TEMP VIEW temp_scores AS
-SELECT 1 AS people_id, 80 AS score, DATE('2024-01-01') AS exam_date
-UNION ALL
-SELECT 1, 90, DATE('2024-03-01')
-UNION ALL
-SELECT 2, 60, DATE('2024-02-01')
-UNION ALL
-SELECT 2, 75, DATE('2024-03-05')
-UNION ALL
-SELECT 3, 92, DATE('2024-03-08');
-
-SELECT
-  p.id,
-  p.name,
-  p.birthday,
-  YEAR(current_date()) - YEAR(p.birthday) AS age,
-  AVG(s.score) AS avg_score
-FROM temp_people p
-JOIN temp_scores s
-  ON p.id = s.people_id
-WHERE s.exam_date >= DATE('2024-01-01')   -- 只看2024年考试
-  AND s.score > 70                        -- 分数大于70
-GROUP BY p.id, p.name, p.birthday
-HAVING AVG(s.score) > 80                  -- 平均分也要大于80
-ORDER BY avg_score DESC;
+```py
+# 查看表结构
+spark.sql("DESCRIBE TABLE my_table").show()
 ```
 
 ```py
@@ -77,5 +44,5 @@ df = spark.createDataFrame([(i, 'hello') for i in ids], "id STRING, temp_str STR
 # 直接落到永久表或永久视图
 df.write.mode("overwrite").option("mergeSchema", "true").saveAsTable("`data-prod-sg`.yikai_test_dbt.tmp_ids")
 # 想彻底重建表结构（字段完全保持与 DataFrame 一致）：先Drop，再SaveAsTable 【`spark.sql("DROP TABLE IF EXISTS `data-prod-sg`.yikai_test_dbt.tmp_ids")`】，或用overwriteSchema（若支持）
-# 或者：df.createOrReplaceGlobalTempView("tmp_ids") 也可以，但不如落到表简单
+# 或者：df.createOrReplaceGlobalTempView("tmp_ids") 也可以，但不如落到表简单[serverless 环境下不能用 createOrReplaceGlobalTempView，只能用本地 temp view 或持久表。]
 ```
