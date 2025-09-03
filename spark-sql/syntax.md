@@ -76,5 +76,6 @@ df = spark.createDataFrame([(i, 'hello') for i in ids], "id STRING, temp_str STR
 
 # 直接落到永久表或永久视图
 df.write.mode("overwrite").option("mergeSchema", "true").saveAsTable("`data-prod-sg`.yikai_test_dbt.tmp_ids")
+# 想彻底重建表结构（字段完全保持与 DataFrame 一致）：先Drop，再SaveAsTable 【`spark.sql("DROP TABLE IF EXISTS `data-prod-sg`.yikai_test_dbt.tmp_ids")`】，或用overwriteSchema（若支持）
 # 或者：df.createOrReplaceGlobalTempView("tmp_ids") 也可以，但不如落到表简单
 ```
