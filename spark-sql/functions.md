@@ -255,7 +255,7 @@ like '%#_%' escape '#'  -- "#_"会匹配真实的下划线
 - lag 前一行
 - dense_rank  -- 1,1,2,...
 - rank  -- 1,1,3,...
-- nth_value  `nth_value(wlb.list_element:createdBy::string, 1, true) over (partition by ... order by wlb.list_element:createTime::int desc) as creator`
+- nth_value  `nth_value(wlb.list_element:createdBy::string, 1, true) over (partition by ... order by wlb.list_element:createTime::bigint desc) as creator`
 - row_number
 
 ---
