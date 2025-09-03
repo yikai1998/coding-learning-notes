@@ -148,7 +148,14 @@ FROM events
 GROUP BY window(event_time, '5 minutes')
 # 如果你要每5分钟统计一次总金额，window会自动帮你把这些 row 按照 12:00-12:05, 12:05-12:10, 12:10-12:15... 分组。
 ```
-
+- unix_date  // Returns the number of days since 1970-01-01.
+- unix_millis
+- unix_micros
+- from_unixtime
+```sql
+SELECT from_unixtime(0);  -- 1970-01-01 00:00:00
+select from_unixtime(1752529852653/1000, 'yyyy-MM-dd')  -- 2025-07-14
+SELECT unix_date(DATE("1970-01-02"));  -- 1
 ---
 
 ## json related  
