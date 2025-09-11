@@ -1,0 +1,30 @@
+```sql 代码片段
+CREATE TEMP TABLE periods_group AS (
+SELECT
+  account_id,
+  MIN(report_date) AS begin_date,
+  MAX(report_date) AS end_date,
+  COUNT(*) AS continuous_days
+FROM (
+  SELECT
+  *,
+  SUM(cal_tag) OVER (PARTITION BY account_id ORDER BY report_date DESC) AS group_tag
+  FROM (
+    SELECT
+    *,
+    CASE WHEN DATE_DIFF(LAG(report_date, 1) OVER (PARTITION BY account_id ORDER BY report_date DESC), report_date, day) = 1 THEN 0 ELSE 1 END AS cal_tag
+    FROM cross_com
+    WHERE (snapshot_t90_fund_inflow_usd + period_t90_fund_outflow_usd > 0)
+  )
+)
+GROUP BY account_id, group_tag 
+HAVING continuous_days >= 10
+);
+```
+
+按account_id+report_date排序，用LAG对比每一行和上一行的日期：
+  若与上一个日期正好相差1天（DATE_DIFF == 1），则是连续的，不断开，cal_tag=0
+  若不是1天（比如跨掉一天或新的一组的第一天），就cal_tag=1，表示断开
+对每个account_id以倒序排列，累加cal_tag
+利用SUM(cal_tag) OVER (PARTITION BY account_id ORDER BY report_date DESC)，这样可以将所有相邻的连续天归为同一个group_tag组号。外层再对account_id和group_tag分组，取每组的MIN/MAX日期和天数
+筛出continuous_days>=10的结果，即连续10天及以上的段落
