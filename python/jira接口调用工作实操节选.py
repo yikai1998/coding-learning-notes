@@ -18,27 +18,34 @@ jira_headers = {
 
 # 用jql搜tickets
 jql_query = "PROJECT IN (CEOPS) AND issuetype in ('CN Inbound File Upload','Multiple GA') AND updated >= -5d ORDER BY created ASC"
-def jql_search(jql, batch_size=20):
-    begin = 0
+def jql_search(jql, batch_size: int = 100, limit: int = 1000):
     all_tickets = []
     go_on = 1
+    next_token = None
+    headers = {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+    }
+    url = 'https://airwallex.atlassian.net/rest/api/3/search/jql'
     while go_on:
-        payload = json.dumps({
-            'fields': ['summary', 'status', 'assignee', 'issuetype', 'customfield_11507'],
-            'fieldsByKeys': False,
+        payload = {
+            'fields': ['summary','status', 'assignee', 'issuetype', 'customfield_11507'],
+            'fieldsByKeys': True,
             'jql': jql,
             'maxResults': batch_size,
-            'startAt': begin
-        })
-        response = requests.request(method='POST', url=jira_url, data=payload, headers=jira_headers, auth=jira_auth).text
+            # 'startAt': begin  # 新版接口已不再用 startAt 分页，而是用 nextPageToken - 20250918
+        }
+        if next_token:
+            payload['nextPageToken'] = next_token
+        response = requests.post(url=url, data=json.dumps(payload), headers=headers, auth=jira_auth).text
         r = response.replace('true', 'True').replace('false', 'False').replace('null', 'None')
         r = ast.literal_eval(r)
         tickets = r.get('issues', [])
+        next_token = r.get('nextPageToken', None)
         all_tickets.extend(tickets)
-        total = r.get('total', 0)
-        begin += batch_size
-        go_on = 0 if begin >= total else 1
-        print(r)
+        if any([limit - len(all_tickets) <= 0, not next_token]):
+            break
+
     return all_tickets
 
 # 通过key搜索该ticket的status transition history
