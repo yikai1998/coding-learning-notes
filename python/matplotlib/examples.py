@@ -54,5 +54,41 @@ ax3.set_title('Penguin attributes by species')
 ax3.set_xticks(x+width, species)  # 手工把刻度线挪到三组柱子的中间位置
 ax3.legend(loc='upper left', ncols=3)  # 把图例横向分成 3 列显示, 也就是一行展示
 
+#### hat graph
+values =[
+    [11, 12, 11, 11, 11],
+    [8, 14, 13, 3, 6],
+]
+x = np.arange(len(values[0]))  # 0, 1, 2, 3, 4
+ax4.set_xticks(x, labels=['I', 'II', 'III', 'IV', 'V'])  # 设置x轴刻度
+spacing = 0.3  # 左右两端留空比例 30%
+width = (1 - spacing) /  len(values)  # 单根柱子宽度
+heights0 = values[0]  # 第一行(以 Player A 的高度)作为基准高度
+
+for i, (heights, group_label) in enumerate(zip(values, ['Player A', 'Player B'])):
+    style = {'fill': False, 'edgecolor': 'blue'} if i == 0 else {'edgecolor': 'black', 'color': 'red'}  # 第一组仅描边不填充，第二组黑色边框+填充
+    heights = np.asarray(heights)  # 确保后续向量运算
+    rects = ax4.bar(
+        x=x-spacing/2+i*width,
+        height=(heights-heights0),  # 仅画 delta 部分
+        width=width,
+        bottom=heights0,  # 从基准线开始往上
+        label=group_label,
+        **style  # "字典拆包"语法, 把字典拆成关键字参数
+    )
+    for height, rect in zip(heights, rects):
+        ax4.annotate(
+            text=f'{height}',  # 文字内容
+            xy=(rect.get_x()+rect.get_width()/2, height),  # 文字位置在柱子顶部的中心
+            xytext=(0, 4),  # 再向上平移4个像素
+            textcoords='offset points',  # 偏移量用像素, 不随缩放改变
+            ha='center',
+            va='bottom',
+        )
+ax4.set_xlabel('Games')
+ax4.set_ylabel('Score')
+ax4.set_ylim(0, 20)  # 固定 y 轴范围，避免帽子被裁
+ax4.set_title('Scores by number of game and players')
+ax4.legend()
 
 plt.show()
