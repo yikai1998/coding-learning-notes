@@ -5,7 +5,7 @@ import numpy as np
 
 ## bar chart
 # 开一个 多行多列 的窗口, 一次性拿到多个 Axes
-fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(nrows=2, ncols=2, figsize=(10, 4))  # 一次性创建"图窗(Figure)"和"坐标轴(Axes)"两个对象, ax 是真正在上面画画的那块画布(坐标系)
+fig, ((ax1, ax2), (ax3, ax4), (ax5, ax6)) = plt.subplots(nrows=3, ncols=2, figsize=(10, 4))  # 一次性创建"图窗(Figure)"和"坐标轴(Axes)"两个对象, ax 是真正在上面画画的那块画布(坐标系)
 
 ### with individual bar colors
 fruits = ['apple', 'blueberry', 'cherry', 'orange']
@@ -90,5 +90,31 @@ ax4.set_ylabel('Score')
 ax4.set_ylim(0, 20)  # 固定 y 轴范围，避免帽子被裁
 ax4.set_title('Scores by number of game and players')
 ax4.legend()
+
+#### discrete distribution as horizontal bar chart
+category_names = ['Strongly disagree', 'Disagree', 'Neither agree nor disagree', 'Agree', 'Strongly agree']
+result = {
+    'Question 1': [10, 15, 17, 32, 26],
+    'Question 2': [26, 22, 29, 10, 13],
+    'Question 3': [35, 37, 7, 2, 19],
+    'Question 4': [32, 11, 9, 15, 33],
+    'Question 5': [21, 29, 5, 5, 40],
+    'Question 6': [8, 19, 5, 30, 38]
+}
+labels = list(result.keys())
+data = np.array(list(result.values()))  # 6行问题, 5列选项
+data_cum = data.cumsum(axis=1)
+category_colors = plt.colormaps['RdYlGn'](np.linspace(0.15, 0.85, data.shape[1]))  # 在 0.15 到 0.85 之间均匀地取 5 个数, 如果直接 linspace(0, 1, 5)会拿到红 橙 黄 浅绿 绿
+ax6.invert_yaxis()  # 将y轴反向, 最上面是Q1, 最下面是Q6
+ax6.xaxis.set_visible(False)  # 隐藏x轴刻度线, 只保留条形长度, 不需要顶部坐标轴
+ax6.set_xlim(left=0, right=np.sum(data, axis=1).max())  # 让x轴的最大刻度=人数最多那一行的总人数
+for i, (colname, color) in enumerate(zip(category_names, category_colors)):
+    widths = data[:, i]  # 每次画一层水平条形, 本层宽度=当前选项人数
+    starts = data_cum[:, i] - widths  # 本层起点=累计-自身宽度, 累计里面已经包含了自身宽度
+    rects = ax6.barh(y=labels, width=widths, left=starts, label=colname, color=color, height=0.5)
+    r, g, b, _ = color
+    text_color = 'white' if r * g * b < 0.5 else 'darkgrey'  # 根据背景亮度决定文字用白还是深灰, 保证可读性
+    ax6.bar_label(container=rects, label_type='center', color=text_color)  # 把人数写在条形中间
+ax6.legend(ncols=len(category_names), bbox_to_anchor=(0, 1), loc='lower left', fontsize='small')  # 先定锚点左上角, 再定图例的左下角去贴(0, 1), 图例整体紧贴着子图 顶部外侧 左侧对齐, 不会压到条形图
 
 plt.show()
