@@ -91,6 +91,19 @@ ax4.set_ylim(0, 20)  # 固定 y 轴范围，避免帽子被裁
 ax4.set_title('Scores by number of game and players')
 ax4.legend()
 
+#### horizontal bar chart
+np.random.seed(19680891)  # 固定随机种子, 保证每次运行得到一样的随机数 只要种子相同 算法走的路线就一模一样 方便复现
+people = ('Tom', 'Dick', 'Harry', 'Slim', 'Jim')
+y_pos = np.arange(len(people))  # 0 1 2 3 4
+performance = 3 + 10 * np.random.rand(len(people))  # 3–13 之间的随机值
+error = np.random.rand(len(people))  # 0–1 之间的随机误差
+r = ax5.barh(y=y_pos, width=performance, xerr=error, align='center')  # 每条横条加上水平误差线 横条中心与y刻度对齐
+ax5.bar_label(container=r, label_type='edge', labels=[f'{float(w):.2f}' for w in performance])  # 强制转 float 再写
+ax5.set_yticks(y_pos, labels=people)  # 把刻度换成名字
+ax5.invert_yaxis()  # y 轴反向, 最上面是 Tom, 最下面是 Jim
+ax5.set_xlabel('Performance')  # x 轴标题
+ax5.set_title('How fast do you want to go today?')  # 图标题
+
 #### discrete distribution as horizontal bar chart
 category_names = ['Strongly disagree', 'Disagree', 'Neither agree nor disagree', 'Agree', 'Strongly agree']
 result = {
