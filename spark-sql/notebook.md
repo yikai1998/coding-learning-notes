@@ -5,6 +5,7 @@
 
 ## 简单案例  
 ```py
+# 最简单的加法功能
 from pyspark.sql.functions import udf  # 导入 UDF 工具，它可以将 Python 普通函数转为 Spark 可用的 UDF（用户自定义函数）。
 from pyspark.sql.types import IntegerType  # 引入类型定义（这里是整数类型），后面注册 UDF 时要指定返回值的类型。
 
