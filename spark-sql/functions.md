@@ -95,6 +95,9 @@ SELECT str_to_map('a:1,b:2,c:3', ',', ':');
 ---
 
 ## date timestamp related
+```sql
+select current_timestamp(), timestamp('2023-01-31T04:07:37.993+00:00') - interval 2 days
+```
 - add_months  // 加的是month，可以减
 - date_add  // 加的是day，可以减 或者有date_sub
 - convert_timezone  // 从一个地区时间转换到另一个地区时间
