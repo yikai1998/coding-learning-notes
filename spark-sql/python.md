@@ -16,6 +16,28 @@ df.write.mode("overwrite").option("mergeSchema", "true").saveAsTable("`data-prod
 # df.createOrReplaceGlobalTempView("tmp_ids_0902")
 ```
 
+## extract data from databricks table
+### method-1
+```py
+%python
+df = spark.sql("select * from `data-prod-sg`.yikai_test_dbt.result_kycsd893")
+df = df.toPandas()
+print(df)
+```
+### method-2
+```py
+# in cell-1
+%sql
+create or replace temp view my_temp as
+select * from `data-prod-sg`.yikai_test_dbt.result_kycsd893;
+```
+```py
+# in cell-2
+%python
+df = spark.table('my_temp').toPandas()
+print(df)
+```
+
 ## connect with google sheet
 ```py
 # in cell-1
