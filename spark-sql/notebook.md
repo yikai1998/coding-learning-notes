@@ -5,6 +5,16 @@
 
 ## 简单案例  
 ```py
+from pyspark.sql.functions import udf  # 导入 UDF 工具，它可以将 Python 普通函数转为 Spark 可用的 UDF（用户自定义函数）。
+from pyspark.sql.types import IntegerType  # 引入类型定义（这里是整数类型），后面注册 UDF 时要指定返回值的类型。
+
+def my_add(x, y):
+    return (x or 0) + (y or 0)
+
+spark.udf.register("my_add", my_add, IntegerType())  # 注册到 SQL 环境；将“my_add”注册为 Spark 的 SQL UDF，可以在 SQL 里直接当函数用，结果类型为整型。
+```
+
+```py
 # 去除特殊字符
 from pyspark.sql.types import StringType
 import re
@@ -61,6 +71,3 @@ def user_status(name, age):
 
 spark.udf.register("user_status", user_status, StringType())
 ```
-
-```py
-# 
