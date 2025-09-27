@@ -3,11 +3,11 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-## bar chart
+# 1. bar chart
 # 开一个 多行多列 的窗口, 一次性拿到多个 Axes
 fig, ((ax1, ax2), (ax3, ax4), (ax5, ax6)) = plt.subplots(nrows=3, ncols=2, figsize=(10, 4))  # 一次性创建"图窗(Figure)"和"坐标轴(Axes)"两个对象, ax 是真正在上面画画的那块画布(坐标系)
 
-### with individual bar colors
+# 1.1 with individual bar colors
 fruits = ['apple', 'blueberry', 'cherry', 'orange']
 counts = [40, 100, 30, 55]
 bar_labels = ['red', 'blue', 'red_', 'orange']  # 数量要和bar的数量匹配, 前缀带有下划线的和为空字符串的标签不会显示在图例中
@@ -18,7 +18,7 @@ ax1.set_ylabel('fruit supply')
 ax1.set_title('Fruit supply by kind and color')
 ax1.legend(title='Fruit color')  # legend 是“图例”, 把每条柱子对应的 label 收集起来画个小表
 
-### stacked bar chart
+# 1.2 stacked bar chart
 species = ('Aelie', 'Chinstrap', 'Gentoo')
 sex_counts = {
     'Male': [73, 34, 61],
@@ -34,7 +34,7 @@ for sex, sex_count in sex_counts.items():
 ax2.legend()  # 只要你给绘图函数传了 label 参数, ax.legend() 就能自动汇总
 plt.tight_layout()  # 自动排版
 
-#### grouped bar chart
+# 1.3 grouped bar chart
 species = ('Aelie', 'Chinstrap', 'Gentoo')
 penguin_means = {
     'Bill Depth': (18.35, 18.43, 14.98),
@@ -54,7 +54,7 @@ ax3.set_title('Penguin attributes by species')
 ax3.set_xticks(x+width, species)  # 手工把刻度线挪到三组柱子的中间位置
 ax3.legend(loc='upper left', ncols=3)  # 把图例横向分成 3 列显示, 也就是一行展示
 
-#### hat graph
+# 1.4 hat graph
 values =[
     [11, 12, 11, 11, 11],
     [8, 14, 13, 3, 6],
@@ -91,7 +91,7 @@ ax4.set_ylim(0, 20)  # 固定 y 轴范围，避免帽子被裁
 ax4.set_title('Scores by number of game and players')
 ax4.legend()
 
-#### horizontal bar chart
+# 1.5 horizontal bar chart
 np.random.seed(19680891)  # 固定随机种子, 保证每次运行得到一样的随机数 只要种子相同 算法走的路线就一模一样 方便复现
 people = ('Tom', 'Dick', 'Harry', 'Slim', 'Jim')
 y_pos = np.arange(len(people))  # 0 1 2 3 4
@@ -104,7 +104,7 @@ ax5.invert_yaxis()  # y 轴反向, 最上面是 Tom, 最下面是 Jim
 ax5.set_xlabel('Performance')  # x 轴标题
 ax5.set_title('How fast do you want to go today?')  # 图标题
 
-#### discrete distribution as horizontal bar chart
+# 1.6 discrete distribution as horizontal bar chart
 category_names = ['Strongly disagree', 'Disagree', 'Neither agree nor disagree', 'Agree', 'Strongly agree']
 result = {
     'Question 1': [10, 15, 17, 32, 26],
@@ -129,5 +129,18 @@ for i, (colname, color) in enumerate(zip(category_names, category_colors)):
     text_color = 'white' if r * g * b < 0.5 else 'darkgrey'  # 根据背景亮度决定文字用白还是深灰, 保证可读性
     ax6.bar_label(container=rects, label_type='center', color=text_color)  # 把人数写在条形中间
 ax6.legend(ncols=len(category_names), bbox_to_anchor=(0, 1), loc='lower left', fontsize='small')  # 先定锚点左上角, 再定图例的左下角去贴(0, 1), 图例整体紧贴着子图 顶部外侧 左侧对齐, 不会压到条形图
+
+plt.show()
+
+
+# 2. line chart
+fig2, ((ax1, ax2), (ax3, ax4), (ax5, ax6)) = plt.subplots(nrows=3, ncols=2, figsize=(10, 4))
+
+# 2.1 basic line plot
+t = np.arange(start=0.0, stop=2.0, step=0.01)  # 0~2, 步长0.01 一共201个点
+s = 1 + np.sin(2 * np.pi * t)  # 把时间数组t放大2π倍 得到弧度坐标, 对整个数组逐元素求正弦，返回同样长度的数组，值域 [-1, 1], 把整条正弦曲线整体向上平移 1 个单位
+ax1.plot(t, s)  # 折线图, x=时间, y=电压
+ax1.set(xlabel='time (s)', ylabel='voltage (mV)', title='About as simple as it gets, folks')
+ax1.grid()  # 打开网格
 
 plt.show()
