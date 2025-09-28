@@ -120,7 +120,7 @@ if re.search(r'good morning|hello world', s):
 匹配一个换行符
 
 \r
-匹配一个回车符
+匹配一个回车符, "\r"会把光标拖回当前行开头, 不会换行
 
 \t
 匹配一个制表符
