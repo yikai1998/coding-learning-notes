@@ -2,11 +2,12 @@
 # matplotlib 官网
 import matplotlib.pyplot as plt
 import numpy as np
+import matplotlib.ticker as mticker
+
+# 开一个 多行多列 的窗口, 一次性拿到多个 Axes
+fig, ((ax1, ax2), (ax3, ax4), (ax5, ax6)) = plt.subplots(nrows=3, ncols=2, figsize=(15, 5))  # 一次性创建"图窗(Figure)"和"坐标轴(Axes)"两个对象, ax 是真正在上面画画的那块画布(坐标系)
 
 # 1. bar chart
-# 开一个 多行多列 的窗口, 一次性拿到多个 Axes
-fig, ((ax1, ax2), (ax3, ax4), (ax5, ax6)) = plt.subplots(nrows=3, ncols=2, figsize=(10, 4))  # 一次性创建"图窗(Figure)"和"坐标轴(Axes)"两个对象, ax 是真正在上面画画的那块画布(坐标系)
-
 # 1.1 with individual bar colors
 fruits = ['apple', 'blueberry', 'cherry', 'orange']
 counts = [40, 100, 30, 55]
@@ -133,14 +134,30 @@ ax6.legend(ncols=len(category_names), bbox_to_anchor=(0, 1), loc='lower left', f
 plt.show()
 
 
-# 2. line chart
-fig2, ((ax1, ax2), (ax3, ax4), (ax5, ax6)) = plt.subplots(nrows=3, ncols=2, figsize=(10, 4))
+fig2, ((ax1, ax2), (ax3, ax4), (ax5, ax6)) = plt.subplots(nrows=3, ncols=2, figsize=(15, 5))  # 一次性创建"图窗(Figure)"和"坐标轴(Axes)"两个对象, ax 是真正在上面画画的那块画布(坐标系)
 
+# 2. line chart
 # 2.1 basic line plot
 t = np.arange(start=0.0, stop=2.0, step=0.01)  # 0~2, 步长0.01 一共201个点
 s = 1 + np.sin(2 * np.pi * t)  # 把时间数组t放大2π倍 得到弧度坐标, 对整个数组逐元素求正弦，返回同样长度的数组，值域 [-1, 1], 把整条正弦曲线整体向上平移 1 个单位
 ax1.plot(t, s)  # 折线图, x=时间, y=电压
 ax1.set(xlabel='time (s)', ylabel='voltage (mV)', title='About as simple as it gets, folks')
 ax1.grid()  # 打开网格
+
+# 2.2 stackplots
+year = [1950, 1960, 1970, 1980, 1990, 2000, 2010, 2018]
+population_by_continent = {
+    'Africa': [.228, .284, .365, .477, .631, .814, 1.044, 1.275],
+    'the Americas': [.340, .425, .519, .619, .727, .840, .943, 1.006],
+    'Asia': [1.394, 1.686, 2.120, 2.625, 3.202, 3.714, 4.169, 4.560],
+    'Europe': [.220, .253, .276, .295, .310, .303, .294, .293],
+    'Oceania': [.012, .015, .019, .022, .026, .031, .036, .039],
+}
+ax2.stackplot(year, population_by_continent.values(), labels=population_by_continent.keys(), alpha=0.8)  # x 和后面所有 y 数组都是位置参数, 不是关键字参数, 顺序即堆叠顺序, 整体透明度 80%
+ax2.legend(loc='upper left', reverse=True)  # reverse=True 让图例顺序跟堆叠顺序一致 (先画在下 图例在上)
+ax2.set_title('World population')
+ax2.set_xlabel('Year')
+ax2.set_ylabel('Number of people (billions)')
+ax2.yaxis.set_minor_locator(mticker.MultipleLocator(.2))  # 每 0.2 十亿人放一根小刻度线 读数更细
 
 plt.show()
