@@ -4,9 +4,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import matplotlib.ticker as mticker
 
+
 # 开一个 多行多列 的窗口, 一次性拿到多个 Axes
 fig, ((ax1, ax2), (ax3, ax4), (ax5, ax6)) = plt.subplots(nrows=3, ncols=2, figsize=(15, 5))  # 一次性创建"图窗(Figure)"和"坐标轴(Axes)"两个对象, ax 是真正在上面画画的那块画布(坐标系)
-
 # 1. bar chart
 # 1.1 with individual bar colors
 fruits = ['apple', 'blueberry', 'cherry', 'orange']
@@ -134,8 +134,7 @@ ax6.legend(ncols=len(category_names), bbox_to_anchor=(0, 1), loc='lower left', f
 plt.show()
 
 
-fig2, ((ax1, ax2), (ax3, ax4), (ax5, ax6)) = plt.subplots(nrows=3, ncols=2, figsize=(15, 5))  # 一次性创建"图窗(Figure)"和"坐标轴(Axes)"两个对象, ax 是真正在上面画画的那块画布(坐标系)
-
+fig2, (ax1, ax2) = plt.subplots(nrows=1, ncols=2, figsize=(15, 5))
 # 2. line chart
 # 2.1 basic line plot
 t = np.arange(start=0.0, stop=2.0, step=0.01)  # 0~2, 步长0.01 一共201个点
@@ -159,5 +158,61 @@ ax2.set_title('World population')
 ax2.set_xlabel('Year')
 ax2.set_ylabel('Number of people (billions)')
 ax2.yaxis.set_minor_locator(mticker.MultipleLocator(.2))  # 每 0.2 十亿人放一根小刻度线 读数更细
+
+plt.show()
+
+
+fig3, (ax1, ax2) = plt.subplots(nrows=1, ncols=2, figsize=(15, 5))
+# 3. heatmap
+vegetables = ['cucumber', 'tomato', 'lettuce', 'asparagus', 'potato', 'wheat', 'barley']
+farmers = ['Farmer Joe', 'Upland Bros.', 'Smith Gardening', 'Agrifun', 'Organiculture', 'BioGoods Ltd.', 'Cornylee Corp.']
+harvest = np.array([[0.8, 2.4, 2.5, 3.9, 0.0, 4.0, 0.0],
+                    [2.4, 0.0, 4.0, 1.0, 2.7, 0.0, 0.0],
+                    [1.1, 2.4, 0.8, 4.3, 1.9, 4.4, 0.0],
+                    [0.6, 0.0, 0.3, 0.0, 3.1, 0.0, 0.0],
+                    [0.7, 1.7, 0.6, 2.6, 2.2, 6.2, 0.0],
+                    [1.3, 1.2, 0.0, 0.0, 0.0, 3.2, 5.1],
+                    [0.1, 2.0, 0.0, 1.4, 0.0, 1.9, 6.3]])
+def heatmap(data, row_labels, col_labels, ax, cbar_kw=None, cbar_label='', **kwargs):
+    if cbar_kw is None:
+        cbar_kw = {}
+    im = ax.imshow(data, **kwargs)  # 用 imshow 画矩阵  是专门把二维数组画成彩色栅格的函数 默认 origin='upper' 行列对应 data[i, j]
+    # 它返回的 AxesImage 本质就是一张带坐标轴的照片, 而 plot 画的是线, bar 画的是矩形, 它们都不需要"颜色表→数值"的映射, 因此没有这种对象
+    # im 里存了两个东西, 原始数据 data, 一个 Normalize 实例 负责把数据线性压到 0~1 再去颜色表里取颜色
+    cbar = ax.figure.colorbar(im, ax=ax, **cbar_kw)   # 为图像添加右侧 colorbar
+    cbar.ax.set_ylabel(cbar_label, rotation=-90, va='bottom')  # 给 colorbar 加纵向标题
+    ax.set_xticks(range(data.shape[1]), labels=col_labels, rotation=-30, ha='right', rotation_mode='anchor')  # 设置 x/y 主刻度位置 + 文字
+    ax.set_yticks(range(data.shape[0]), labels=row_labels)
+    ax.tick_params(top=True, bottom=False, labeltop=True, labelbottom=False)  # 把刻度放到上方，并隐藏下方刻度
+    ax.spines[:].set_visible(False)  # 去掉四周 spine边框
+    # 画单元格分隔线：用 minor tick 定位，网格线 style 设成白色宽线
+    ax.set_xticks(np.arange(data.shape[1]+1)+0.5, minor=True)  # minor=True 明确告诉坐标轴这是次要刻度
+    ax.set_yticks(np.arange(data.shape[0]+1)-0.5, minor=True)  # 列数7, [-0.5  0.5  1.5 ... 6.5]
+    ax.grid(which='minor', color='w', linestyle='-', linewidth=3)  # 用白线在这些位置画竖线 于是出现单元格边框效果
+    ax.tick_params(which='minor', bottom=False, left=False)  # 只对次要刻度线生效 把 x 轴次要刻度线(竖的小黑线) + y 轴次要刻度线(横的小黑线)隐藏
+    return im, cbar
+
+def annotate_heatmap(im, data=None, valfmt='{x:.2f}', textcolors=('black', 'white'), threshold=None, **textkw):
+    if not isinstance(data, (list, np.ndarray)):  # 类型不是 list 也不是 ndarray
+        data = im.get_array()  # 从热力图对象里把原始 7×7 矩阵再拿出来
+    if threshold is not None:
+        threshold = im.norm(threshold)  # 在热力图每个格子里写上数值, 并根据背景亮度自动选黑字或白字
+    else:
+        threshold = im.norm(data.max())/2  # 如果没有指定阈值 就用数据最大值的一半作为 亮/暗 分界线, True → 深色 → 用白字
+    kw = dict(horizontalalignment='center', verticalalignment='center')  # 默认文字对齐方式
+    kw.update(textkw)  # 用户自定义的额外关键字 全放在 textkw 里一次性合并进来
+    if isinstance(valfmt, str):  # 把格式字符串转成 matplotlib 格式化器
+        valfmt = mticker.StrMethodFormatter(valfmt)
+    texts = []
+    for i in range(data.shape[0]):
+        for j in range(data.shape[1]):
+            kw.update(color=textcolors[int(im.norm(data[i, j])>threshold)])  # 判断当前格子亮度 决定用黑字还是白字
+            text = im.axes.text(j, i, valfmt(data[i, j], None), **kw)  # 把数值按指定格式写进格子中心
+            texts.append(text)
+    return texts
+
+im, cbar = heatmap(harvest, vegetables, farmers, ax=ax1, cmap='YlGn', cbar_label='harvest [t/year]')
+texts = annotate_heatmap(im, valfmt='{x:.1f} t')  # 在每个格子里写数值 保留 1 位小数并加单位, 可以事后继续改
+fig3.tight_layout()  # 自动调间距，防止文字溢出
 
 plt.show()
