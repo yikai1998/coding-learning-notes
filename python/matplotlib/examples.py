@@ -3,6 +3,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import matplotlib.ticker as mticker
+import matplotlib.patches as mpatches
 
 
 # 开一个 多行多列 的窗口, 一次性拿到多个 Axes
@@ -116,7 +117,7 @@ ax6.legend(ncols=len(category_names), bbox_to_anchor=(0, 1), loc='lower left', f
 plt.show()
 
 
-fig2, ((ax1, ax2), (ax3, ax4)) = plt.subplots(nrows=2, ncols=2, figsize=(15, 25))
+fig2, (ax1, ax2, ax3) = plt.subplots(nrows=3, ncols=1, figsize=(15, 25))
 # 2. line chart
 # 2.1 basic line plot
 t = np.arange(start=0.0, stop=2.0, step=0.01)  # 0~2, 步长0.01 一共201个点
@@ -192,5 +193,53 @@ def annotate_heatmap(im, data=None, valfmt='{x:.2f}', textcolors=('black', 'whit
 im, cbar = heatmap(harvest, vegetables, farmers, ax=ax3, cmap='YlGn', cbar_label='harvest [t/year]')
 texts = annotate_heatmap(im, valfmt='{x:.1f} t')  # 在每个格子里写数值 保留 1 位小数并加单位, 可以事后继续改
 fig2.tight_layout()  # 自动调间距，防止文字溢出
+
+plt.show()
+
+
+fig3, ((ax1, ax2), (ax3, ax4)) = plt.subplots(nrows=2, ncols=2, figsize=(15, 25))
+# 3. pie chart
+# 3.1 slices
+labels = ('Frogs', 'Hogs', 'Dogs', 'Logs')
+sizes = [15, 30, 145, 10]  # 每块的大小 列表或数组
+colors=['olivedrab', 'rosybrown', 'gray', 'saddlebrown']  # 将颜色列表传递给颜色来设置每个切片的颜色
+explode = (0, 0.1, 0, 0)  # 长度必须跟 sizes 一样长, 0不拽 >0往外拽多少
+ax1.pie(x=sizes, labels=labels, autopct='%1.1f%%', colors=colors, explode=explode, shadow=True, startangle=90)  # autopct 老式的C/printf风格, "%1.1f"小数一位的浮点数, "%%"转义打印出真正的%, startangle 旋转整个饼图让第一块从头顶开始 而不是右边 (饼图从 0°（3 点钟）开始逆时针画)
+
+# 3.2 bar of pie
+overall_ratios = [0.27, 0.56, 0.17]
+labels = ['Approve', 'Disapprove', 'Undecided']
+explode = [0.1, 0, 0]
+angle = -180 * overall_ratios[0]  # 把起始边向负方向挪一半角度 让这块正中被水平轴切开
+#  3 个 Wedge 对象列表
+wedges, *_ = ax3.pie(x=overall_ratios, labels=labels, autopct='%1.1f%%', explode=explode, startangle=angle)
+age_ratios = [0.33, 0.54, 0.07, 0.06]
+age_labels = ['Under 35', '35-49', '50-65', 'Over 65']  # 用倒序循环 从最老段开始往下画 这样图例顺序与柱子从上到下一致
+bottom = 1
+width = 0.2
+for j, (height, label) in enumerate(reversed([*zip(age_ratios, age_labels)])):
+    bottom -= height
+    bc = ax4.bar(0, height=height, width=width, bottom=bottom, color='red', label=label, alpha=0.1+0.25*j)  # 透明度从 0.1 → 0.85 线性加深 远看像渐变色柱 近看能区分段
+    ax4.bar_label(bc, labels=[f'{height:.0%}'], label_type='center')  # f'{表达式:格式说明符}' "把后面的值当成百分比显示 保留 0 位小数"
+ax4.set_title('Age of approvers')
+ax4.legend()
+ax4.axis('off')  # 把坐标轴全部关掉 纯粹当彩色积木看
+ax4.set_xlim(-2.5*width, 2.5*width)
+theta1, theta2 = wedges[0].theta1, wedges[0].theta2  # 拿第 0 块Approve的两条角度边画线, 起止角度
+center, r = wedges[0].center, wedges[0].r  # 把Approve这块扇形的圆心坐标和半径掏出来 后面公式里当极坐标原点用
+bar_height = sum(age_ratios)
+x = r * np.cos(np.pi/180*theta2) + center[0]  # x = r * cos(θ) + center[0], 把极坐标 (θ, r) 转成笛卡尔坐标 (x, y)
+y = r * np.sin(np.pi/180*theta2) + center[1]
+# ConnectionPatch 跨子图画任意线段
+con = mpatches.ConnectionPatch(xyA=(-width/2, bar_height), coordsA=ax4.transData, xyB=(x, y), coordsB=ax3.transData)  # 子图数据坐标系
+con.set_color([0, 0, 0])
+ax4.add_artist(con)
+con.set_linewidth(4)
+x = r * np.cos(np.pi/180*theta1) + center[0]
+y = r * np.sin(np.pi/180*theta1) + center[1]
+con = mpatches.ConnectionPatch(xyA=(-width/2, 0), coordsA=ax4.transData, xyB=(x, y), coordsB=ax3.transData)
+con.set_color([0, 0, 0])
+ax4.add_artist(con)
+con.set_linewidth(4)
 
 plt.show()
