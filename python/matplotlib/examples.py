@@ -9,31 +9,13 @@ import matplotlib.ticker as mticker
 fig, ((ax1, ax2), (ax3, ax4), (ax5, ax6)) = plt.subplots(nrows=3, ncols=2, figsize=(15, 5))  # 一次性创建"图窗(Figure)"和"坐标轴(Axes)"两个对象, ax 是真正在上面画画的那块画布(坐标系)
 # 1. bar chart
 # 1.1 with individual bar colors
-fruits = ['apple', 'blueberry', 'cherry', 'orange']
-counts = [40, 100, 30, 55]
-bar_labels = ['red', 'blue', 'red_', 'orange']  # 数量要和bar的数量匹配, 前缀带有下划线的和为空字符串的标签不会显示在图例中
-bar_colors = ['tab:red', 'tab:blue', 'tab:red', 'tab:orange']
-# 以后所有"画什么"都通过 ax 下的方法完成, 而不是 plt.xxx, 这样写法更面向对象, 也更容易把多张图放一起
-ax1.bar(fruits, counts, label=bar_labels, color=bar_colors)  # 画柱形图, 第一参数决定 x 轴位置(这里直接用字符串, matplotlib 会自动把它们当类别型刻度)
-ax1.set_ylabel('fruit supply')
-ax1.set_title('Fruit supply by kind and color')
-ax1.legend(title='Fruit color')  # legend 是“图例”, 把每条柱子对应的 label 收集起来画个小表
-
-# 1.2 stacked bar chart
-species = ('Aelie', 'Chinstrap', 'Gentoo')
-sex_counts = {
-    'Male': [73, 34, 61],
-    'Female': [50, 24, 58],
-}
-width = 0.6  # 单根柱子的总宽度, 也可以改成数组给每个柱子不同宽
-bottom = np.zeros(3)  # 初始 [0, 0, 0], 之后循环中不断 += 新的段高度, 实现逐层堆叠
-for sex, sex_count in sex_counts.items():
-    # 依次取出 Male 与 Female
-    p = ax2.bar(x=species, height=sex_count, width=width, label=sex, bottom=bottom)
-    bottom += sex_count  # 更新底部，供下一段堆叠使用
-    ax2.bar_label(p, label_type='center')  # 把数值写在段内正中
-ax2.legend()  # 只要你给绘图函数传了 label 参数, ax.legend() 就能自动汇总
-plt.tight_layout()  # 自动排版
+x = np.logspace(0, 3, 300)          # 0.1 ~ 1000
+y = 1 / (1 + x**2)                  # 1/f? 衰减
+ax1.loglog(x, y, label='1/f?')
+ax1.set_xlabel('Frequency [Hz]')
+ax1.set_ylabel('PSD')
+ax1.set_title('Log-Log Plot')
+ax1.legend()
 
 # 1.3 grouped bar chart
 species = ('Aelie', 'Chinstrap', 'Gentoo')
@@ -134,7 +116,7 @@ ax6.legend(ncols=len(category_names), bbox_to_anchor=(0, 1), loc='lower left', f
 plt.show()
 
 
-fig2, (ax1, ax2) = plt.subplots(nrows=1, ncols=2, figsize=(15, 5))
+fig2, ((ax1, ax2), (ax3, ax4)) = plt.subplots(nrows=2, ncols=2, figsize=(15, 25))
 # 2. line chart
 # 2.1 basic line plot
 t = np.arange(start=0.0, stop=2.0, step=0.01)  # 0~2, 步长0.01 一共201个点
@@ -159,10 +141,6 @@ ax2.set_xlabel('Year')
 ax2.set_ylabel('Number of people (billions)')
 ax2.yaxis.set_minor_locator(mticker.MultipleLocator(.2))  # 每 0.2 十亿人放一根小刻度线 读数更细
 
-plt.show()
-
-
-fig3, (ax1, ax2) = plt.subplots(nrows=1, ncols=2, figsize=(15, 5))
 # 3. heatmap
 vegetables = ['cucumber', 'tomato', 'lettuce', 'asparagus', 'potato', 'wheat', 'barley']
 farmers = ['Farmer Joe', 'Upland Bros.', 'Smith Gardening', 'Agrifun', 'Organiculture', 'BioGoods Ltd.', 'Cornylee Corp.']
@@ -211,8 +189,8 @@ def annotate_heatmap(im, data=None, valfmt='{x:.2f}', textcolors=('black', 'whit
             texts.append(text)
     return texts
 
-im, cbar = heatmap(harvest, vegetables, farmers, ax=ax1, cmap='YlGn', cbar_label='harvest [t/year]')
+im, cbar = heatmap(harvest, vegetables, farmers, ax=ax3, cmap='YlGn', cbar_label='harvest [t/year]')
 texts = annotate_heatmap(im, valfmt='{x:.1f} t')  # 在每个格子里写数值 保留 1 位小数并加单位, 可以事后继续改
-fig3.tight_layout()  # 自动调间距，防止文字溢出
+fig2.tight_layout()  # 自动调间距，防止文字溢出
 
 plt.show()
