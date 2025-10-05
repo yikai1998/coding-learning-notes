@@ -206,7 +206,23 @@ colors=['olivedrab', 'rosybrown', 'gray', 'saddlebrown']  # 将颜色列表传�
 explode = (0, 0.1, 0, 0)  # 长度必须跟 sizes 一样长, 0不拽 >0往外拽多少
 ax1.pie(x=sizes, labels=labels, autopct='%1.1f%%', colors=colors, explode=explode, shadow=True, startangle=90)  # autopct 老式的C/printf风格, "%1.1f"小数一位的浮点数, "%%"转义打印出真正的%, startangle 旋转整个饼图让第一块从头顶开始 而不是右边 (饼图从 0°（3 点钟）开始逆时针画)
 
-# 3.2 bar of pie
+# 3.2 donut
+recipe = ['225 g flour', '90 g sugar', '1 egg', '60 g butter', '100 ml milk', '1/2 package of yeast']
+data = [225, 90, 50, 60, 100, 5]
+wedges, texts, autotexts = ax2.pie(x=data, wedgeprops=dict(width=0.5), startangle=-40, autopct='%1.1f%%')  # 把半径挖掉一半 → 形成甜甜圈, 返回 wedges 列表, 每个元素是一个Wedge对象 后面要拿它的角度和半径
+bbox_props = dict(boxstyle='square,pad=0.3', fc='w', ec='k', lw=0.72)  # 方形框 文字到边框留0.3点边距 facecolor框里填白色 edgecolor边框黑色 linewidth线宽0.72点
+kw = dict(arrowprops=dict(arrowstyle='-'), bbox=bbox_props, zorder=0, va='center')  # 无箭头头 把上面那个框套在文字外 图层最底层,防止压线 文字垂直居中
+for i, p in enumerate(wedges):
+    ang = (p.theta2 - p.theta1)/2. + p.theta1  # 取扇形中心角度
+    y = np.sin(np.deg2rad(ang))  # 角度→弧度→圆上一点 (x,y) 单位圆坐标 你只要给出角度 ×1就是圆上一点, 半径1是pie的默认半径
+    x = np.cos(np.deg2rad(ang))
+    horizontalalignment = {-1: 'right', 1:'left'}[int(np.sign(x))]
+    connectionstyle = f'angle,angleA=0,angleB={ang}'  # 线段先水平再折向圆上 看起来整齐
+    kw['arrowprops'].update({'connectionstyle': connectionstyle})
+    ax2.annotate(text=recipe[i], xy=(x,y), xytext=(1.35*np.sign(x), 1.4*y), horizontalalignment=horizontalalignment, **kw)  # annotate带箭头的文字 自动画一条线从xytext→xy 线型,颜色,头型,折弯方式全在arrowprops里调
+ax2.set_title('Matplotlib bakery: A donut')
+
+# 3.3 bar of pie
 overall_ratios = [0.27, 0.56, 0.17]
 labels = ['Approve', 'Disapprove', 'Undecided']
 explode = [0.1, 0, 0]
