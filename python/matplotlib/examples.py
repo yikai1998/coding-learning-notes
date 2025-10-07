@@ -76,7 +76,7 @@ ax4.set_title('Scores by number of game and players')
 ax4.legend()
 
 # 1.5 horizontal bar chart
-np.random.seed(19680891)  # 固定随机种子, 保证每次运行得到一样的随机数 只要种子相同 算法走的路线就一模一样 方便复现
+np.random.seed(19680891)  # 固定随机种子, 随便写 整数就行 长度不限 只当哈希入口 想让图变就换个数保证每次运行得到一样的随机数 只要种子相同 算法走的路线就一模一样 方便复现
 people = ('Tom', 'Dick', 'Harry', 'Slim', 'Jim')
 y_pos = np.arange(len(people))  # 0 1 2 3 4
 performance = 3 + 10 * np.random.rand(len(people))  # 3–13 之间的随机值
@@ -197,7 +197,7 @@ fig2.tight_layout()  # 自动调间距，防止文字溢出
 plt.show()
 
 
-fig3, ((ax1, ax2), (ax3, ax4)) = plt.subplots(nrows=2, ncols=2, figsize=(15, 25))
+fig3, ((ax1, ax2), (ax3, ax4), (ax5, ax6)) = plt.subplots(nrows=3, ncols=2, figsize=(15, 25))
 # 3. pie chart
 # 3.1 slices
 labels = ('Frogs', 'Hogs', 'Dogs', 'Logs')
@@ -257,5 +257,15 @@ con = mpatches.ConnectionPatch(xyA=(-width/2, 0), coordsA=ax4.transData, xyB=(x,
 con.set_color([0, 0, 0])
 ax4.add_artist(con)
 con.set_linewidth(4)
+
+# 3.4 bar chart on polar axis
+np.random.seed(19680801)  #  固定随机种子 (保证每次运行图形一样)
+theta = np.linspace(start=0.0, stop=2*np.pi, num=20, endpoint=False)  # θ 20个角度 均匀分布在0~2Π 返回等差数组 从start→stop 共num个点, endpoint=False表示不包含stop值 所以不重叠起点
+radii = 10 * np.random.rand(20)  # 每个扇形的半径 0~1 小数 ×10 → 0~10
+width = np.pi / 4 * np.random.rand(20)  # 每个扇形的圆心角度宽度 让每瓣角度在 0°~45°之间 看起来稀疏美观
+colors = plt.cm.viridis(radii/10.)  # 颜色按照半径映射
+ax5.remove()  # 先删掉原来的直角坐标轴
+ax5 = fig3.add_subplot(3, 2, 5, projection='polar', aspect='equal')
+ax5.bar(x=theta, height=radii, width=width, bottom=0, color=colors, alpha=0.5)  # bottom=0 都从圆心开始(可改成环) 透明度0.5 让重叠处好看
 
 plt.show()
