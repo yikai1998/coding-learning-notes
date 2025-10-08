@@ -25,11 +25,13 @@ plt.show()
 # 1.1 with individual bar colors
 fruits = ['apple', 'blueberry', 'cherry', 'orange']
 counts = [40, 100, 30, 55]
-bar_labels = ['red', 'blue', 'red_', 'orange']  # 数量要和bar的数量匹配, 前缀带有下划线的和为空字符串的标签不会显示在图例中
-bar_colors = ['tab:red', 'tab:blue', 'tab:red', 'tab:orange']
+bar_labels = ['red', 'blue', '_red', 'orange']  # 数量要和bar的数量匹配, 前缀带有下划线的和为空字符串的标签不会显示在legend图例中
+bar_colors = ['tab:red', 'tab:blue', 'tab:red', 'tab:orange']  # 每个bar的颜色
 # 以后所有"画什么"都通过 ax 下的方法完成, 而不是 plt.xxx, 这样写法更面向对象, 也更容易把多张图放一起
-ax1.bar(fruits, counts, label=bar_labels, color=bar_colors)  # 画柱形图, 第一参数决定 x 轴位置(这里直接用字符串, matplotlib 会自动把它们当类别型刻度)
+p = ax1.bar(x=fruits, height=counts, label=bar_labels, color=bar_colors)  # 画柱形图, 第一参数决定 x 轴位置(这里直接用字符串, matplotlib 会自动把它们当类别型刻度)
+ax1.bar_label(p, label_type='edge', padding=-1)
 ax1.set_ylabel('fruit supply')
+ax1.set_xlabel('fruit category')
 ax1.set_title('Fruit supply by kind and color')
 ax1.legend(title='Fruit color')  # legend 是“图例”, 把每条柱子对应的 label 收集起来画个小表
 
@@ -43,7 +45,7 @@ width = 0.6  # 单根柱子的总宽度, 也可以改成数组给每个柱子不
 bottom = np.zeros(3)  # 初始 [0, 0, 0], 之后循环中不断 += 新的段高度, 实现逐层堆叠
 for sex, sex_count in sex_counts.items():
     # 依次取出 Male 与 Female
-    p = ax2.bar(x=species, height=sex_count, width=width, label=sex, bottom=bottom)
+    p = ax2.bar(x=species, height=sex_count, width=width, label=sex, bottom=bottom)  # 这里的label不是文字, 而是bar的固有属性标签, 后面的legend有用
     bottom += sex_count  # 更新底部，供下一段堆叠使用
     ax2.bar_label(p, label_type='center')  # 把数值写在段内正中
 ax2.legend()  # 只要你给绘图函数传了 label 参数, ax.legend() 就能自动汇总
