@@ -8,15 +8,46 @@ import matplotlib.patches as mpatches
 
 # 开一个 多行多列 的窗口, 一次性拿到多个 Axes
 fig, ((ax1, ax2), (ax3, ax4), (ax5, ax6)) = plt.subplots(nrows=3, ncols=2, figsize=(15, 5))  # 一次性创建"图窗(Figure)"和"坐标轴(Axes)"两个对象, ax 是真正在上面画画的那块画布(坐标系)
+"""
+Question: 假如我想不要ax6, 我希望ax5单独占一行
+fig = plt.figure(figsize=(15, 10))
+gs  = fig.add_gridspec(3, 2, height_ratios=[1, 1, 1.2])   # 第3行稍高
+ax1 = fig.add_subplot(gs[0, 0])
+ax2 = fig.add_subplot(gs[0, 1])
+ax3 = fig.add_subplot(gs[1, 0])
+ax4 = fig.add_subplot(gs[1, 1])
+ax5 = fig.add_subplot(gs[2, :])   # 整行合并
+...  # 下面正常画
+plt.tight_layout()
+plt.show()
+"""
 # 1. bar chart
 # 1.1 with individual bar colors
-x = np.logspace(0, 3, 300)          # 0.1 ~ 1000
-y = 1 / (1 + x**2)                  # 1/f? 衰减
-ax1.loglog(x, y, label='1/f?')
-ax1.set_xlabel('Frequency [Hz]')
-ax1.set_ylabel('PSD')
-ax1.set_title('Log-Log Plot')
-ax1.legend()
+fruits = ['apple', 'blueberry', 'cherry', 'orange']
+counts = [40, 100, 30, 55]
+bar_labels = ['red', 'blue', 'red_', 'orange']  # 数量要和bar的数量匹配, 前缀带有下划线的和为空字符串的标签不会显示在图例中
+bar_colors = ['tab:red', 'tab:blue', 'tab:red', 'tab:orange']
+# 以后所有"画什么"都通过 ax 下的方法完成, 而不是 plt.xxx, 这样写法更面向对象, 也更容易把多张图放一起
+ax1.bar(fruits, counts, label=bar_labels, color=bar_colors)  # 画柱形图, 第一参数决定 x 轴位置(这里直接用字符串, matplotlib 会自动把它们当类别型刻度)
+ax1.set_ylabel('fruit supply')
+ax1.set_title('Fruit supply by kind and color')
+ax1.legend(title='Fruit color')  # legend 是“图例”, 把每条柱子对应的 label 收集起来画个小表
+
+# 1.2 stacked bar chart
+species = ('Aelie', 'Chinstrap', 'Gentoo')
+sex_counts = {
+    'Male': [73, 34, 61],
+    'Female': [50, 24, 58],
+}
+width = 0.6  # 单根柱子的总宽度, 也可以改成数组给每个柱子不同宽
+bottom = np.zeros(3)  # 初始 [0, 0, 0], 之后循环中不断 += 新的段高度, 实现逐层堆叠
+for sex, sex_count in sex_counts.items():
+    # 依次取出 Male 与 Female
+    p = ax2.bar(x=species, height=sex_count, width=width, label=sex, bottom=bottom)
+    bottom += sex_count  # 更新底部，供下一段堆叠使用
+    ax2.bar_label(p, label_type='center')  # 把数值写在段内正中
+ax2.legend()  # 只要你给绘图函数传了 label 参数, ax.legend() 就能自动汇总
+plt.tight_layout()  # 自动排版
 
 # 1.3 grouped bar chart
 species = ('Aelie', 'Chinstrap', 'Gentoo')
