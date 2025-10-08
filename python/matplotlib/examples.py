@@ -49,7 +49,6 @@ for sex, sex_count in sex_counts.items():
     bottom += sex_count  # 更新底部，供下一段堆叠使用
     ax2.bar_label(p, label_type='center')  # 把数值写在段内正中
 ax2.legend()  # 只要你给绘图函数传了 label 参数, ax.legend() 就能自动汇总
-plt.tight_layout()  # 自动排版
 
 # 1.3 grouped bar chart
 species = ('Aelie', 'Chinstrap', 'Gentoo')
@@ -61,10 +60,11 @@ penguin_means = {
 x = np.arange(len(species))  # 0, 1, 2 用来当基本刻度
 width = 0.15  # 单根柱子的宽度
 multiplier = 0  # 偏移序号
+color_list = ['red', 'yellow', 'green']
 for attribute, measurement in penguin_means.items():
     offset = width * multiplier  # 当前指标的整体左右平移距离
-    p = ax3.bar(x=x+offset, height=measurement, width=width, label=attribute)  # 画当前组的柱子
-    ax3.bar_label(container=p, padding=-20, label_type='edge')  #  先把文字锚定在柱顶外侧, 然后再把这个锚点整体往下移xx个像素
+    p = ax3.bar(x=x+offset, height=measurement, width=width, label=attribute, color=color_list[multiplier])  # 画当前组的柱子
+    ax3.bar_label(container=p, padding=-15, label_type='edge')  #  先把文字锚定在柱顶外侧, 然后再把这个锚点整体往下移xx个像素
     multiplier += 1  # 0, 1, 2 对应三项指标
 ax3.set_ylabel('Length (mm)')
 ax3.set_title('Penguin attributes by species')
@@ -77,11 +77,10 @@ values =[
     [8, 14, 13, 3, 6],
 ]
 x = np.arange(len(values[0]))  # 0, 1, 2, 3, 4
-ax4.set_xticks(x, labels=['I', 'II', 'III', 'IV', 'V'])  # 设置x轴刻度
+ax4.set_xticks(x, labels=['I', 'II', 'III', 'IV', 'V'])  # 设置x轴刻度的值和文字标记
 spacing = 0.3  # 左右两端留空比例 30%
-width = (1 - spacing) /  len(values)  # 单根柱子宽度
+width = (1 - spacing) /  len(values)  # 间接推算每根柱子的宽度
 heights0 = values[0]  # 第一行(以 Player A 的高度)作为基准高度
-
 for i, (heights, group_label) in enumerate(zip(values, ['Player A', 'Player B'])):
     style = {'fill': False, 'edgecolor': 'blue'} if i == 0 else {'edgecolor': 'black', 'color': 'red'}  # 第一组仅描边不填充，第二组黑色边框+填充
     heights = np.asarray(heights)  # 确保后续向量运算
@@ -145,8 +144,8 @@ for i, (colname, color) in enumerate(zip(category_names, category_colors)):
     r, g, b, _ = color
     text_color = 'white' if r * g * b < 0.5 else 'darkgrey'  # 根据背景亮度决定文字用白还是深灰, 保证可读性
     ax6.bar_label(container=rects, label_type='center', color=text_color)  # 把人数写在条形中间
-ax6.legend(ncols=len(category_names), bbox_to_anchor=(0, 1), loc='lower left', fontsize='small')  # 先定锚点左上角, 再定图例的左下角去贴(0, 1), 图例整体紧贴着子图 顶部外侧 左侧对齐, 不会压到条形图
-
+ax6.legend(ncols=len(category_names)/2, bbox_to_anchor=(0, 1), loc='lower left', fontsize='small')  # 先定锚点左上角, 再定图例的左下角去贴(0, 1), 图例整体紧贴着子图 顶部外侧 左侧对齐, 不会压到条形图
+fig.tight_layout()  # 自动排版
 plt.show()
 
 
@@ -156,6 +155,8 @@ fig2, (ax1, ax2, ax3) = plt.subplots(nrows=3, ncols=1, figsize=(15, 25))
 t = np.arange(start=0.0, stop=2.0, step=0.01)  # 0~2, 步长0.01 一共201个点
 s = 1 + np.sin(2 * np.pi * t)  # 把时间数组t放大2π倍 得到弧度坐标, 对整个数组逐元素求正弦，返回同样长度的数组，值域 [-1, 1], 把整条正弦曲线整体向上平移 1 个单位
 ax1.plot(t, s)  # 折线图, x=时间, y=电压
+s2 = 1 + np.cos(2 * np.pi * t)  # 自定义cos
+ax1.plot(t, s2)
 ax1.set(xlabel='time (s)', ylabel='voltage (mV)', title='About as simple as it gets, folks')
 ax1.grid()  # 打开网格
 
@@ -226,7 +227,6 @@ def annotate_heatmap(im, data=None, valfmt='{x:.2f}', textcolors=('black', 'whit
 im, cbar = heatmap(harvest, vegetables, farmers, ax=ax3, cmap='YlGn', cbar_label='harvest [t/year]')
 texts = annotate_heatmap(im, valfmt='{x:.1f} t')  # 在每个格子里写数值 保留 1 位小数并加单位, 可以事后继续改
 fig2.tight_layout()  # 自动调间距，防止文字溢出
-
 plt.show()
 
 
@@ -300,5 +300,5 @@ colors = plt.cm.viridis(radii/10.)  # 颜色按照半径映射
 ax5.remove()  # 先删掉原来的直角坐标轴
 ax5 = fig3.add_subplot(3, 2, 5, projection='polar', aspect='equal')
 ax5.bar(x=theta, height=radii, width=width, bottom=0, color=colors, alpha=0.5)  # bottom=0 都从圆心开始(可改成环) 透明度0.5 让重叠处好看
-
+fig3.tight_layout()
 plt.show()
