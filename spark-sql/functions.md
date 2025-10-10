@@ -97,6 +97,7 @@ SELECT str_to_map('a:1,b:2,c:3', ',', ':');
 ## date timestamp related
 ```sql
 select current_timestamp(), timestamp('2023-01-31T04:07:37.993+00:00') - interval 2 days
+// 你如果写的是 '2023-01-31T04:07:37.993+08:00' 那么会自动帮你转成+00的时间 如果你没写或写的直接是+00 那么时间就不会变 仍然是+00
 ```
 - add_months  // 加的是month，可以减
 - date_add  // 加的是day，可以减 或者有date_sub
