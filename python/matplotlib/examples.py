@@ -7,7 +7,7 @@ import matplotlib.patches as mpatches
 
 
 # 开一个 多行多列 的窗口, 一次性拿到多个 Axes
-fig, ((ax1, ax2), (ax3, ax4), (ax5, ax6)) = plt.subplots(nrows=3, ncols=2, figsize=(15, 5))  # 一次性创建"图窗(Figure)"和"坐标轴(Axes)"两个对象, ax 是真正在上面画画的那块画布(坐标系)
+fig, ((ax1, ax2), (ax3, ax4), (ax5, ax6)) = plt.subplots(nrows=3, ncols=2, figsize=(20, 25))  # 一次性创建"图窗(Figure)"和"坐标轴(Axes)"两个对象, ax 是真正在上面画画的那块画布(坐标系)
 """
 Question: 假如我想不要ax6, 我希望ax5单独占一行
 fig = plt.figure(figsize=(15, 10))
@@ -250,13 +250,13 @@ wedges, texts, autotexts = ax2.pie(x=data, wedgeprops=dict(width=0.5), startangl
 bbox_props = dict(boxstyle='square,pad=0.3', fc='w', ec='k', lw=0.72)  # 方形框 文字到边框留0.3点边距 facecolor框里填白色 edgecolor边框黑色 linewidth线宽0.72点
 kw = dict(arrowprops=dict(arrowstyle='-'), bbox=bbox_props, zorder=0, va='center')  # 无箭头头 把上面那个框套在文字外 图层最底层,防止压线 文字垂直居中
 for i, p in enumerate(wedges):
-    ang = (p.theta2 - p.theta1)/2. + p.theta1  # 取扇形中心角度
+    ang = (p.theta2 + p.theta1)/2.  # 取扇形中心角度
     y = np.sin(np.deg2rad(ang))  # 角度→弧度→圆上一点 (x,y) 单位圆坐标 你只要给出角度 ×1就是圆上一点, 半径1是pie的默认半径
     x = np.cos(np.deg2rad(ang))
-    horizontalalignment = {-1: 'right', 1:'left'}[int(np.sign(x))]
+    horizontalalignment = {-1: 'right', 1:'left'}[int(np.sign(x))]  # 左右判断器 保证文字始终往外躲 不跟圆重叠
     connectionstyle = f'angle,angleA=0,angleB={ang}'  # 线段先水平再折向圆上 看起来整齐
     kw['arrowprops'].update({'connectionstyle': connectionstyle})
-    ax2.annotate(text=recipe[i], xy=(x,y), xytext=(1.35*np.sign(x), 1.4*y), horizontalalignment=horizontalalignment, **kw)  # annotate带箭头的文字 自动画一条线从xytext→xy 线型,颜色,头型,折弯方式全在arrowprops里调
+    ax2.annotate(text=recipe[i], xy=(x,y), xytext=(1.35*np.sign(x), 1.4*y), horizontalalignment=horizontalalignment, **kw)  # annotate带箭头的文字 自动画一条线从xytext→xy 线型,颜色,头型,折弯方式全在arrowprops里调, 1.35 就是随手写的放大系数
 ax2.set_title('Matplotlib bakery: A donut')
 
 # 4.3 bar of pie
