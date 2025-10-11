@@ -149,7 +149,7 @@ fig.tight_layout()  # 自动排版
 plt.show()
 
 
-fig2, (ax1, ax2, ax3) = plt.subplots(nrows=3, ncols=1, figsize=(15, 25))
+fig2, (ax1, ax2) = plt.subplots(nrows=2, ncols=1, figsize=(15, 15))
 # 2. line chart
 # 2.1 basic line plot
 t = np.arange(start=0.0, stop=2.0, step=0.01)  # 0~2, 步长0.01 一共201个点
@@ -175,7 +175,11 @@ ax2.set_title('World population')
 ax2.set_xlabel('Year')
 ax2.set_ylabel('Number of people (billions)')
 ax2.yaxis.set_minor_locator(mticker.MultipleLocator(.2))  # 每 0.2 十亿人放一根小刻度线 读数更细
+fig2.tight_layout()  # 自动调间距，防止文字溢出
+plt.show()
 
+
+fig3, ax1 = plt.subplots(nrows=1, ncols=1, figsize=(10, 10))
 # 3. heatmap
 vegetables = ['cucumber', 'tomato', 'lettuce', 'asparagus', 'potato', 'wheat', 'barley']
 farmers = ['Farmer Joe', 'Upland Bros.', 'Smith Gardening', 'Agrifun', 'Organiculture', 'BioGoods Ltd.', 'Cornylee Corp.']
@@ -224,22 +228,22 @@ def annotate_heatmap(im, data=None, valfmt='{x:.2f}', textcolors=('black', 'whit
             texts.append(text)
     return texts
 
-im, cbar = heatmap(harvest, vegetables, farmers, ax=ax3, cmap='YlGn', cbar_label='harvest [t/year]')
+im, cbar = heatmap(harvest, vegetables, farmers, ax=ax1, cmap='YlGn', cbar_label='harvest [t/year]')
 texts = annotate_heatmap(im, valfmt='{x:.1f} t')  # 在每个格子里写数值 保留 1 位小数并加单位, 可以事后继续改
-fig2.tight_layout()  # 自动调间距，防止文字溢出
+fig3.tight_layout()  # 自动调间距，防止文字溢出
 plt.show()
 
 
-fig3, ((ax1, ax2), (ax3, ax4), (ax5, ax6)) = plt.subplots(nrows=3, ncols=2, figsize=(15, 25))
-# 3. pie chart
-# 3.1 slices
+fig4, ((ax1, ax2), (ax3, ax4), (ax5, ax6)) = plt.subplots(nrows=3, ncols=2, figsize=(15, 25))
+# 4. pie chart
+# 4.1 slices
 labels = ('Frogs', 'Hogs', 'Dogs', 'Logs')
 sizes = [15, 30, 145, 10]  # 每块的大小 列表或数组
 colors=['olivedrab', 'rosybrown', 'gray', 'saddlebrown']  # 将颜色列表传递给颜色来设置每个切片的颜色
 explode = (0, 0.1, 0, 0)  # 长度必须跟 sizes 一样长, 0不拽 >0往外拽多少
 ax1.pie(x=sizes, labels=labels, autopct='%1.1f%%', colors=colors, explode=explode, shadow=True, startangle=90)  # autopct 老式的C/printf风格, "%1.1f"小数一位的浮点数, "%%"转义打印出真正的%, startangle 旋转整个饼图让第一块从头顶开始 而不是右边 (饼图从 0°（3 点钟）开始逆时针画)
 
-# 3.2 donut
+# 4.2 donut
 recipe = ['225 g flour', '90 g sugar', '1 egg', '60 g butter', '100 ml milk', '1/2 package of yeast']
 data = [225, 90, 50, 60, 100, 5]
 wedges, texts, autotexts = ax2.pie(x=data, wedgeprops=dict(width=0.5), startangle=-40, autopct='%1.1f%%')  # 把半径挖掉一半 → 形成甜甜圈, 返回 wedges 列表, 每个元素是一个Wedge对象 后面要拿它的角度和半径
@@ -255,7 +259,7 @@ for i, p in enumerate(wedges):
     ax2.annotate(text=recipe[i], xy=(x,y), xytext=(1.35*np.sign(x), 1.4*y), horizontalalignment=horizontalalignment, **kw)  # annotate带箭头的文字 自动画一条线从xytext→xy 线型,颜色,头型,折弯方式全在arrowprops里调
 ax2.set_title('Matplotlib bakery: A donut')
 
-# 3.3 bar of pie
+# 4.3 bar of pie
 overall_ratios = [0.27, 0.56, 0.17]
 labels = ['Approve', 'Disapprove', 'Undecided']
 explode = [0.1, 0, 0]
@@ -291,14 +295,14 @@ con.set_color([0, 0, 0])
 ax4.add_artist(con)
 con.set_linewidth(4)
 
-# 3.4 bar chart on polar axis
+# 4.4 bar chart on polar axis
 np.random.seed(19680801)  #  固定随机种子 (保证每次运行图形一样)
 theta = np.linspace(start=0.0, stop=2*np.pi, num=20, endpoint=False)  # θ 20个角度 均匀分布在0~2Π 返回等差数组 从start→stop 共num个点, endpoint=False表示不包含stop值 所以不重叠起点
 radii = 10 * np.random.rand(20)  # 每个扇形的半径 0~1 小数 ×10 → 0~10
 width = np.pi / 4 * np.random.rand(20)  # 每个扇形的圆心角度宽度 让每瓣角度在 0°~45°之间 看起来稀疏美观
 colors = plt.cm.viridis(radii/10.)  # 颜色按照半径映射
 ax5.remove()  # 先删掉原来的直角坐标轴
-ax5 = fig3.add_subplot(3, 2, 5, projection='polar', aspect='equal')
+ax5 = fig4.add_subplot(3, 2, 5, projection='polar', aspect='equal')
 ax5.bar(x=theta, height=radii, width=width, bottom=0, color=colors, alpha=0.5)  # bottom=0 都从圆心开始(可改成环) 透明度0.5 让重叠处好看
-fig3.tight_layout()
+fig4.tight_layout()
 plt.show()
